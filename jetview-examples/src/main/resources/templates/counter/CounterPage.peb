@@ -1,0 +1,15 @@
+{% extends "templates/BasePage.peb" %}
+
+{# @pebvariable name="counter" type="Component" #}
+{# @pebvariable name="minusButton" type="Component" #}
+{# @pebvariable name="plusButton" type="Component" #}
+
+{% block title %} Counter Page {{ title }} {% endblock %}
+
+{% block content %}
+<div class="px-4 text-center col-lg-6 mx-auto">
+    {{ minusButton }}
+    {{ counter }}
+    {{ plusButton }}
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "templates/BasePage.peb" %}
+
+{% block title %} ToDo Page {% endblock %}
+
+{% block content %}
+    <div class="px-4 text-center col-lg-6 mx-auto">
+        {{ counter }}
+        {{ addForm }}
+        {{ todoList }}
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" src="{{ js }}/todo/todo-page.js"></script>
+{% endblock %}

@@ -1,0 +1,3 @@
+{# @pebvariable name="value" type="int" #}
+{# @pebvariable name="className" type="String" #}
+<span class="badge {{ className }} mx-2 fs-4">{{ value }}</span>

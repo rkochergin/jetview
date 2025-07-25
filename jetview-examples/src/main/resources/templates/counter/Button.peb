@@ -1,0 +1,3 @@
+{# @pebvariable name="onclick" type="Event" #}
+{# @pebvariable name="name" type="String" #}
+<button type="button" class="btn btn-primary" onclick="{{ onclick }}">{{ name }}</button>

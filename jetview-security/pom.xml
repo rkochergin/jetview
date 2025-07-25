@@ -7,13 +7,14 @@
     <parent>
         <groupId>com.jetview</groupId>
         <artifactId>jetview-parent</artifactId>
-        <version>${revision}</version>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>jetview-security</artifactId>
-    <version>${revision}</version>
 
     <name>JetView Security</name>
 
+    <dependencies>
+    </dependencies>
 
 </project>

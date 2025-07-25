@@ -1,0 +1,4 @@
+{# @pebvariable name="items" type="List<TodoListItem>" #}
+<ul class="list-group">
+    {{ items }}
+</ul>

@@ -1,0 +1,3 @@
+{# @pebvariable name="counter" type="int" #}
+{# @pebvariable name="onclick" type="Event" #}
+<div onclick="{{ onclick }}">Counter value is {{ counter }}</div>

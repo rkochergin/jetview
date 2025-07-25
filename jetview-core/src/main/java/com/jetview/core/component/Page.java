@@ -1,0 +1,35 @@
+package com.jetview.core.component;
+
+import com.jetview.core.app.ApplicationContext;
+import com.jetview.core.app.JetViewContext;
+import com.jetview.core.app.JetViewRequest;
+import com.jetview.util.MimeTypes;
+import jakarta.servlet.http.HttpServletRequest;
+
+/**
+ * @author Roman Kochergin
+ */
+public class Page extends Container {
+
+    public String getContentType() {
+        return MimeTypes.TEXT_HTML;
+    }
+
+    public ApplicationContext getApplicationContext() {
+        return JetViewContext.getApplicationContext();
+    }
+
+    public HttpServletRequest getRequest() {
+        return JetViewRequest.getRequest();
+    }
+
+    public <T, S extends T> S getResource(Class<T> resourceType) {
+        return getApplicationContext().getResourceFactory().getResource(resourceType);
+    }
+
+    @Override
+    public String render() {
+        model.put("request", getRequest());
+        return super.render();
+    }
+}

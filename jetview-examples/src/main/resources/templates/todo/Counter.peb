@@ -1,0 +1,3 @@
+{# @pebvariable name="completedCount" type="int" #}
+{# @pebvariable name="totalCount" type="int" #}
+<h1><span class="badge bg-primary mb-3">{{ completedCount }}/{{ totalCount }}</span></h1>

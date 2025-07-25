@@ -1,0 +1,5 @@
+{% extends "templates/pages/BasePage.peb" %}
+
+{% block title %} {{ title }} {% endblock %}
+
+{% block content %} {{ content }} {% endblock %}

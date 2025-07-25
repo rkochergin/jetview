@@ -1,0 +1,20 @@
+{% extends "templates/BasePage.peb" %}
+
+{# @pebvariable name="message" type="String" #}
+
+{% block title %} Hello World Page {% endblock %}
+
+{% block content %}
+    <div class="px-4 text-center col-lg-6 mx-auto">
+        <h1>{{ message }}</h1>
+        <form method="get" action="{{ servletPath }}">
+            <div class="input-group mb-3">
+                <input type="text" name="name" class="form-control"
+                       placeholder="Type your name here" required
+                       aria-label="Username" aria-describedby="submit-button">
+                <button class="btn btn-outline-secondary"
+                        type="submit" id="submit-button">Submit</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+{% set img = "/resources/images" %}
+{% set css = "/resources/css" %}
+{% set js = "/resources/javascript" %}
+{% set servletPath = request.servletPath %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta data-servlet-path="{{ servletPath }}">
+    <link rel="shortcut icon" href="/resources/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="{{ css }}/bootstrap.min.css" type="text/css"/>
+    <title>{% block title %} This is title {% endblock %}</title>
+    {% block head %}{% endblock %}
+</head>
+<body>
+<div class="container">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+        <a href="/hello-world" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+            <img class="me-3" height="32px" src="{{ img }}/jetview.png" alt="Jet View Logo">
+            <span class="fs-4">Examples</span>
+        </a>
+        <ul class="nav nav-pills">
+            <li class="nav-item"><a href="/hello-world" class="nav-link {{ "/hello-world" == request.servletPath ? "active" : "" }}">Hello World</a></li>
+            <li class="nav-item"><a href="/counter" class="nav-link {{ "/counter" == request.servletPath ? "active" : "" }}">Counter</a></li>
+            <li class="nav-item"><a href="/todo" class="nav-link {{ "/todo" == request.servletPath ? "active" : "" }}">ToDo</a></li>
+        </ul>
+    </header>
+    {% block content %}{% endblock %}
+</div>
+<script type="text/javascript" src="{{ js }}/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="{{ js }}/jetview-1.0.0-SNAPSHOT.js"></script>
+{% block javascript %}{% endblock %}
+</body>
+</html>
