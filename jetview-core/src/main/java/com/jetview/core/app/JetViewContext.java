@@ -68,4 +68,7 @@ public class JetViewContext {
     public static JetViewWebApplication getApplication() {
         return getThreadContext().getApplication();
     }
+
+    private JetViewContext() {
+    }
 }

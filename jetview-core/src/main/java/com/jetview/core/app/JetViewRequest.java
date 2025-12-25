@@ -16,4 +16,7 @@ public class JetViewRequest {
         var pathInfo = getRequest().getPathInfo();
         return StringUtils.hasText(pathInfo) ? pathInfo : "/";
     }
+
+    private JetViewRequest() {
+    }
 }
