@@ -2,10 +2,7 @@ package com.jetview.core.component;
 
 import com.jetview.util.Removal;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serial;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
@@ -50,13 +47,16 @@ public abstract class Container extends Component
         return null;
     }
 
-    @Serial
-    private void writeObject(ObjectOutputStream out) throws IOException {
-        out.defaultWriteObject();
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Container container = (Container) o;
+        return Objects.equals(components, container.components);
     }
 
-    @Serial
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        in.defaultReadObject();
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), components);
     }
 }

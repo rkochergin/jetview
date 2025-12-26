@@ -8,8 +8,9 @@ import com.jetview.core.processor.IComponentPostRenderProcessor;
 import com.jetview.core.renderer.IRenderer;
 import com.jetview.util.Removal;
 import com.jetview.util.SerializableLazyValue;
+import com.jetview.util.function.SerializableSupplier;
 
-import java.io.Serializable;
+import java.io.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
@@ -51,7 +52,7 @@ public abstract class Component implements Renderable, Child<Component>, Seriali
                 .ifPresent(ajaxBehavior -> ajaxBehavior.getEventHandler().onEvent(new Event(this, event, params)));
     }
 
-    protected Removal<?> addValue(String viewId, Supplier<?> supplier) {
+    protected Removal<?> addValue(String viewId, SerializableSupplier<?> supplier) {
         checkModelKey(viewId);
         model.put(viewId, supplier);
         return () -> {
@@ -129,5 +130,16 @@ public abstract class Component implements Renderable, Child<Component>, Seriali
     @Override
     public int hashCode() {
         return Objects.hash(getId());
+    }
+
+    @Serial
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        model.entrySet().removeIf(e -> !(e.getValue() instanceof Serializable));
+        out.defaultWriteObject();
+    }
+
+    @Serial
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
     }
 }
