@@ -20,6 +20,17 @@ public class StringUtils {
         return str != null && !str.isBlank();
     }
 
+    /**
+     * Capitalizes a String changing the first character to title case.
+     * No other characters are changed.
+     *
+     * @param str the {@code String} to capitalize (maybe {@code null})
+     * @return capitalized {@code String} or {@code null}
+     */
+    public static @Nullable String capitalize(@Nullable String str) {
+        return hasText(str) ? str.substring(0, 1).toUpperCase() + str.substring(1) : str;
+    }
+
     private StringUtils() {
     }
 }
