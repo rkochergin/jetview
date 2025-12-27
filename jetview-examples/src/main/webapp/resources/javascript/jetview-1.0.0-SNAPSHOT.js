@@ -7,11 +7,12 @@ const JV = (() => {
             try {
                 const json = JSON.parse(this.responseText);
                 json.forEach((item) => {
-                    const e = document.querySelector(`[data-jv-id='${item.id}']`);
+                    const e = findElementByJetViewId(item.id);
                     if (e.tagName === "BODY") {
                         e.innerHTML = unescapeHTML(item.text);
                     } else {
                         e.outerHTML = unescapeHTML(item.text);
+                        initJs(findElementByJetViewId(item.id));
                     }
                 })
                 if (callback) {
@@ -28,6 +29,21 @@ const JV = (() => {
         xHttp.send(JSON.stringify({"id": id, "event": event, "data": data}));
     }
 
+    function findElementByJetViewId(jvId) {
+        return document.querySelector(`[data-jv-id='${jvId}']`);
+    }
+
+    function initJs(element) {
+        const component = element.dataset.jvJs;
+        if (component) {
+            const namespaces = component.split(".");
+            const context = namespaces.shift()
+            const func = namespaces.length > 0 ? namespaces.join(".") + ".init" : "init";
+            executeFunctionByName(func, eval(context), element);
+            delete element.dataset.jvJs;
+        }
+    }
+
     function getServletPath() {
         const attrName = 'data-servlet-path';
         const e = document.querySelector(`meta[${attrName}]`);
@@ -35,7 +51,7 @@ const JV = (() => {
     }
 
     function unescapeHTML(str) {
-        return str.replace(
+        return str.replaceAll(
             /&amp;|&lt;|&gt;|&#39;|&quot;/g,
             tag =>
                 ({
@@ -48,5 +64,22 @@ const JV = (() => {
         );
     }
 
-    return {call};
+    function executeFunctionByName(functionName, context) {
+        const args = Array.prototype.slice.call(arguments, 2);
+        const namespaces = functionName.split(".");
+        const func = namespaces.pop();
+        for (const element of namespaces) {
+            context = context[element];
+        }
+        return context[func](...args);
+    }
+
+    return {call, initJs};
 })();
+
+window.onload = () => {
+    const elements = document.querySelectorAll('[data-jv-js]');
+    elements.forEach(element => {
+        JV.initJs(element);
+    });
+};
