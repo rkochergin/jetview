@@ -54,7 +54,7 @@ public class DefaultApplicationContext implements ApplicationContext {
             this.pageInterceptors = Set.of();
             this.componentPostRenderProcessors = Set.of(
                     new RemoveJavaScriptComponentPostRenderProcessor(),
-                    new SetComponentAttributeIdPostRenderProcessor(),
+                    new SetComponentAttributesPostRenderProcessor(),
                     new PageBodyOnlyComponentPostRenderProcessor());
         }
 
