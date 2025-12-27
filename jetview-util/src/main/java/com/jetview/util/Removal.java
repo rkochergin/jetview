@@ -1,5 +1,7 @@
 package com.jetview.util;
 
-public interface Removal<T> {
+import java.io.Serializable;
+
+public interface Removal<T> extends Serializable {
     T remove();
 }
