@@ -29,7 +29,7 @@ public class Page extends Container {
 
     @Override
     public String render() {
-        model.put("request", getRequest());
+        setProperty("request", this::getRequest);
         return super.render();
     }
 }

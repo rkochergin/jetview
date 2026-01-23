@@ -2,7 +2,7 @@ package com.jetview.core.app;
 
 import com.jetview.core.annotation.View;
 import com.jetview.core.component.Component;
-import com.jetview.core.component.event.AjaxClickBehavior;
+import com.jetview.core.component.event.Event;
 
 /**
  * @author Roman Kochergin
@@ -14,10 +14,10 @@ public class TestComponent extends Component {
 
     public TestComponent(int counter) {
         this.counter = counter;
-        addValue("counter", () -> this.counter);
-        addBehavior(new AjaxClickBehavior(event -> {
+        setProperty("counter", () -> this.counter);
+        setListener(Event.ON_CLICK, event -> {
             ++this.counter;
             notifyStateChange();
-        }));
+        });
     }
 }

@@ -1,0 +1,2 @@
+{# @pebvariable name="position" type="com.jetview.examples.bootstrap.BsToastContainer.Position" #}
+<div is="bs-toast-container" class="toast-container" data-jv-position="{{position.name()}}" style="z-index: 11"></div>

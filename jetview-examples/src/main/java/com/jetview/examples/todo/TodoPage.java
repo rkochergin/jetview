@@ -23,9 +23,9 @@ public class TodoPage extends Page {
             counter.setTotalCount(todoService.getCount());
             todoList.addTodo(todoService.get(todo.getId()));
         });
-        addComponent("counter", counter);
-        addComponent("addForm", form);
-        addComponent("todoList", todoList);
+        setComponent("counter", counter);
+        setComponent("addForm", form);
+        setComponent("todoList", todoList);
     }
 
     private static TodoList createTodoList(TodoService todoService, Counter counter) {

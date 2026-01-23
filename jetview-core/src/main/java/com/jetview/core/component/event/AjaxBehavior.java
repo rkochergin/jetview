@@ -3,13 +3,14 @@ package com.jetview.core.component.event;
 import com.jetview.core.component.Component;
 import com.jetview.core.util.AjaxUtils;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Objects;
 
 public class AjaxBehavior implements IAjaxBehavior {
 
     private final String event;
-    private final Map<String, Object> parameters;
+    private final Map<String, Serializable> parameters;
     private final IEventHandler eventHandler;
 
     public AjaxBehavior(String event) {
@@ -20,11 +21,11 @@ public class AjaxBehavior implements IAjaxBehavior {
         this(event, null, eventHandler);
     }
 
-    public AjaxBehavior(String event, Map<String, Object> parameters) {
+    public AjaxBehavior(String event, Map<String, Serializable> parameters) {
         this(event, parameters, null);
     }
 
-    public AjaxBehavior(String event, Map<String, Object> parameters, IEventHandler eventHandler) {
+    public AjaxBehavior(String event, Map<String, Serializable> parameters, IEventHandler eventHandler) {
         this.event = event;
         this.parameters = parameters;
         this.eventHandler = eventHandler;

@@ -1,0 +1,31 @@
+{% extends "templates/BasePage.peb" %}
+
+{% block title %} Bootstrap Page {% endblock %}
+
+{% block content %}
+
+    {{ CustomComponent }}
+
+    {{ Toasts }}
+
+    <h4>Regular styles</h4>
+    <div class="d-flex gap-2 my-4">{{ RegularButtonStyles }}</div>
+
+    <h4>Outline styles</h4>
+    <div class="d-flex gap-2 my-4">{{ OutlineButtonStyles }}</div>
+
+    <h4>Sizes</h4>
+    <div class="d-flex gap-2 my-4">{{ LargeButtonSizes }}</div>
+    <div class="d-flex gap-2 my-4">{{ SmallButtonSizes }}</div>
+
+    <h4>Disabled state</h4>
+    <div class="d-flex gap-2 my-4">{{ DisabledButtonStates }}</div>
+
+    <h4>Button events</h4>
+    <div class="d-flex gap-2 my-4">{{ ButtonEvents }}</div>
+
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" src="{{ js }}/bootstrap/bootstrap-page.js"></script>
+{% endblock %}

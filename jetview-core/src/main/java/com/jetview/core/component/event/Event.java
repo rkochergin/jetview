@@ -6,12 +6,12 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.Objects;
 
-public record Event(Component component, String event, Map<String, Object> params) implements Serializable {
+public record Event(Component component, String event, Map<String, Serializable> params) implements Serializable {
 
     public static final String ON_CLICK = "onclick";
     public static final String ON_DOUBLE_CLICK = "ondblclick";
 
-    public Event(Component component, String event, Map<String, Object> params) {
+    public Event(Component component, String event, Map<String, Serializable> params) {
         this.component = component;
         this.event = event;
         this.params = Objects.nonNull(params) ? Map.copyOf(params) : null;
@@ -21,16 +21,7 @@ public record Event(Component component, String event, Map<String, Object> param
         return paramType.cast(params.get(key));
     }
 
-    public <T> T getParam(String key, Class<T> paramType, T defaultValue) {
+    public <T extends Serializable> T getParam(String key, Class<T> paramType, T defaultValue) {
         return paramType.cast(params.getOrDefault(key, defaultValue));
     }
-
-    @Override
-    public String toString() {
-        return "Event[" +
-                "component=" + component + ", " +
-                "event=" + event + ", " +
-                "params=" + params + ']';
-    }
-
 }

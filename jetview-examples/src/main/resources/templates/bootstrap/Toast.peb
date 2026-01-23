@@ -1,0 +1,10 @@
+{# @pebvariable name="Header" type="com.jetview.core.component.Renderable" #}
+{# @pebvariable name="Body" type="com.jetview.core.component.Renderable" #}
+<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+        {{ Header.render() }}
+    </div>
+    <div class="toast-body">
+        {{ Body.render() }}
+    </div>
+</div>

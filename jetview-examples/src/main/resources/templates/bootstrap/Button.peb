@@ -1,0 +1,6 @@
+{# @pebvariable name="text" type="String" #}
+{# @pebvariable name="style" type="com.jetview.examples.bootstrap.BsButton.Style" #}
+{# @pebvariable name="size" type="com.jetview.examples.bootstrap.BsButton.Size" #}
+{# @pebvariable name="disabled" type="String" #}
+{# @pebvariable name="onClick" type="String" #}
+<button is="bs-button" type="button" class="btn {{ style.value() }} {{ size.value() }} {{ disabled }}" {{ onClick }}>{{ text }}</button>

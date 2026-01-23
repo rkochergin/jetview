@@ -13,8 +13,8 @@ public class Counter extends Component {
 
     public Counter(int value) {
         this.value = value;
-        addValue("value", () -> this.value);
-        addValue("className", this::getClassName);
+        setProperty("value", () -> this.value);
+        setProperty("className", this::getClassName);
     }
 
     public void inc() {

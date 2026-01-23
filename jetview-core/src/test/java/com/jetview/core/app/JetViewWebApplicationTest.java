@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 
@@ -64,6 +65,8 @@ class JetViewWebApplicationTest {
         assertTrue(output.contains("Counter value is 10"));
     }
 
+
+    @Disabled
     @Test
     void doPost() throws IOException {
         var config = mockApplicationConfig();

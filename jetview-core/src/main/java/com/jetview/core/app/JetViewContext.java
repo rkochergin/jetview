@@ -9,7 +9,8 @@ import com.jetview.core.renderer.IRenderer;
 import com.jetview.util.generator.IdGenerator;
 import jakarta.servlet.http.HttpServletRequest;
 
-import java.util.Set;
+import java.io.Serializable;
+import java.util.*;
 
 import static com.jetview.core.app.JetViewWebApplication.getThreadContext;
 
@@ -48,12 +49,26 @@ public class JetViewContext {
         return Set.copyOf(getApplicationContext().getComponentPostRenderProcessors());
     }
 
-    public static void addStaleComponent(Component component) {
-        getThreadContext().getStaleComponentIds().add(component.getId());
+    public static void addStaleComponent(Component component, Map<String, Serializable> data) {
+        var staleComponents = getThreadContext().getStaleComponents();
+        staleComponents.compute(component.getId(), (k, v) -> {
+            if (v == null) {
+                var list = new ArrayList<Map<String, Serializable>>();
+                if (Objects.nonNull(data)) {
+                    list.add(data);
+                }
+                return list;
+            } else {
+                if (Objects.nonNull(data)) {
+                    v.add(data);
+                }
+                return v;
+            }
+        });
     }
 
-    public static Set<String> getStaleComponentIds() {
-        return Set.copyOf(getThreadContext().getStaleComponentIds());
+    public static Map<String, List<Map<String, Serializable>>> getStaleComponents() {
+        return Map.copyOf(getThreadContext().getStaleComponents());
     }
 
     public static boolean isJetViewAjaxPageRequest() {

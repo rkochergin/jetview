@@ -1,5 +1,5 @@
 {# @pebvariable name="componentId" type="String" #}
-<form class="form" onsubmit="TodoPage.AddForm.submitForm('{{ componentId }}', arguments[0])">
+<form is="todo-add-form" class="form">
     <div class="input-group mb-3">
         <input type="text" name="title" required autocomplete="off"
                class="form-control" placeholder="Write your next task"

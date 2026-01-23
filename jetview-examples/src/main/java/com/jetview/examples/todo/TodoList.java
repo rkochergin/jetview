@@ -24,7 +24,7 @@ public class TodoList extends Container {
         todoListItems = new Composite<>(todos.stream()
                 .map(this::createTodoListItem)
                 .toList());
-        addComponent("items", todoListItems);
+        setComponent("items", todoListItems);
     }
 
     public void addTodo(Todo todo) {

@@ -31,7 +31,7 @@
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <version>11.0.24</version>
+                <version>11.0.26</version>
                 <configuration>
                     <scan>2</scan>
                     <!-- Hot deploy pebble templates -->

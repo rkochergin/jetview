@@ -122,7 +122,7 @@ public class JetViewWebApplication {
 
     static class JetViewWebApplicationServlet extends GenericServlet {
 
-        private final JetViewWebApplication application;
+        private final transient JetViewWebApplication application;
 
         JetViewWebApplicationServlet(JetViewWebApplication application) {
             this.application = application;

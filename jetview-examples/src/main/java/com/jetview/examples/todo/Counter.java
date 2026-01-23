@@ -15,8 +15,8 @@ public class Counter extends Component {
     public Counter(int completedCount, int totalCount) {
         this.completedCount = completedCount;
         this.totalCount = totalCount;
-        addValue("completedCount", () -> this.completedCount);
-        addValue("totalCount", () -> this.totalCount);
+        setProperty("completedCount", () -> this.completedCount);
+        setProperty("totalCount", () -> this.totalCount);
     }
 
     public void setCompletedCount(int completedCount) {

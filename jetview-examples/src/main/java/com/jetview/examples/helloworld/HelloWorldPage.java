@@ -12,6 +12,6 @@ import com.jetview.core.component.Page;
 @View("templates/helloworld/HelloWorldPage.peb")
 public class HelloWorldPage extends Page {
     public HelloWorldPage(@RequestParam(name = "name", defaultValue = "World") String name) {
-        addValue("message", () -> "Hello %s!".formatted(name));
+        setProperty("message", () -> "Hello %s!".formatted(name));
     }
 }

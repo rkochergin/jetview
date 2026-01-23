@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta data-servlet-path="{{ servletPath }}">
+    <meta data-jv-servlet-path="{{ servletPath }}">
     <link rel="shortcut icon" href="/resources/favicon.ico" type="image/x-icon"/>
     <link rel="stylesheet" href="{{ css }}/bootstrap.min.css" type="text/css"/>
     <title>{% block title %} This is title {% endblock %}</title>
@@ -24,12 +24,14 @@
             <li class="nav-item"><a href="/hello-world" class="nav-link {{ "/hello-world" == request.servletPath ? "active" : "" }}">Hello World</a></li>
             <li class="nav-item"><a href="/counter" class="nav-link {{ "/counter" == request.servletPath ? "active" : "" }}">Counter</a></li>
             <li class="nav-item"><a href="/todo" class="nav-link {{ "/todo" == request.servletPath ? "active" : "" }}">ToDo</a></li>
+            <li class="nav-item"><a href="/bootstrap" class="nav-link {{ "/bootstrap" == request.servletPath ? "active" : "" }}">Bootstrap</a></li>
         </ul>
     </header>
     {% block content %}{% endblock %}
 </div>
 <script type="text/javascript" src="{{ js }}/bootstrap.bundle.min.js"></script>
 <script type="text/javascript" src="{{ js }}/jetview-1.0.0-SNAPSHOT.js"></script>
+<script type="text/javascript" src="{{ js }}/jetview-components-1.0.0-SNAPSHOT.js"></script>
 {% block javascript %}{% endblock %}
 </body>
 </html>

@@ -14,7 +14,7 @@ public class TestPage extends Page {
     public TestPage(@RequestParam("title") String title,
                     @RequestParam(name = "empty", defaultValue = "is") String empty,
                     @RequestParam(name = "counter") int counter) {
-        addValue("title", () -> "This %s %s".formatted(empty, title));
-        addComponent("content", new TestComponent(counter));
+        setProperty("title", () -> "This %s %s".formatted(empty, title));
+        setComponent("content", new TestComponent(counter));
     }
 }

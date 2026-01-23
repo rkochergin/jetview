@@ -2,7 +2,6 @@ package com.jetview.examples.todo;
 
 import com.jetview.core.annotation.View;
 import com.jetview.core.component.Component;
-import com.jetview.core.component.event.AjaxBehavior;
 import com.jetview.core.component.event.IEventHandler;
 import com.jetview.examples.todo.model.Todo;
 
@@ -16,7 +15,7 @@ public class TodoListItem extends Component {
 
     public TodoListItem(Todo todo) {
         this.todo = todo;
-        addValue("todo", () -> this.todo);
+        setProperty("todo", () -> this.todo);
     }
 
     public Todo getTodo() {
@@ -29,14 +28,14 @@ public class TodoListItem extends Component {
     }
 
     public void setCompleteHandler(IEventHandler completeHandler) {
-        addBehavior(new AjaxBehavior("onComplete", completeHandler));
+        setListener("onComplete", completeHandler);
     }
 
     public void setChangeHandler(IEventHandler changeHandler) {
-        addBehavior(new AjaxBehavior("onChange", changeHandler));
+        setListener("onChange", changeHandler);
     }
 
     public void setDeleteHandler(IEventHandler deleteHandler) {
-        addBehavior(new AjaxBehavior("onDelete", deleteHandler));
+        setListener("onDelete", deleteHandler);
     }
 }

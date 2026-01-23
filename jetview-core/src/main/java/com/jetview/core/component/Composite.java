@@ -11,7 +11,7 @@ import java.util.stream.Stream;
  * @author Roman Kochergin
  */
 public class Composite<T extends Component> extends Component
-        implements Parent<Component>, Traversable<Component> {
+        implements Parent<T>, Traversable<Component> {
 
     private final List<T> components = Collections.synchronizedList(new ArrayList<>());
 

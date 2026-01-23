@@ -3,7 +3,9 @@ package com.jetview.core.app;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import java.util.Set;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -14,7 +16,7 @@ class ThreadContext {
     private final JetViewWebApplication application;
     private final HttpServletRequest request;
     private final HttpServletResponse response;
-    private final Set<String> staleComponentIds = ConcurrentHashMap.newKeySet();
+    private final Map<String, List<Map<String, Serializable>>> staleComponents = new ConcurrentHashMap<>();
 
     ThreadContext(JetViewWebApplication application, HttpServletRequest request, HttpServletResponse response) {
         this.application = application;
@@ -34,7 +36,7 @@ class ThreadContext {
         return response;
     }
 
-    public Set<String> getStaleComponentIds() {
-        return staleComponentIds;
+    public Map<String, List<Map<String, Serializable>>> getStaleComponents() {
+        return staleComponents;
     }
 }

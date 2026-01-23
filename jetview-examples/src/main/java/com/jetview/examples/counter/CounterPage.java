@@ -12,8 +12,8 @@ import com.jetview.core.component.Page;
 public class CounterPage extends Page {
     public CounterPage() {
         Counter counter = new Counter(0);
-        addComponent("counter", counter);
-        addComponent("minusButton", new Button("-", event -> counter.dec()));
-        addComponent("plusButton", new Button("+", event -> counter.inc()));
+        setComponent("counter", counter);
+        setComponent("minusButton", new Button("-", event -> counter.dec()));
+        setComponent("plusButton", new Button("+", event -> counter.inc()));
     }
 }

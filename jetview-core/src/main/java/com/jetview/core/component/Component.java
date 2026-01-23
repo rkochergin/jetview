@@ -1,35 +1,34 @@
 package com.jetview.core.component;
 
-import com.jetview.core.app.JetViewContext;
 import com.jetview.core.component.event.Event;
-import com.jetview.core.component.event.IAjaxBehavior;
-import com.jetview.core.exception.JetViewRuntimeException;
+import com.jetview.core.component.event.IEventHandler;
+import com.jetview.core.component.model.ComponentModel;
+import com.jetview.core.component.model.Model;
 import com.jetview.core.processor.IComponentPostRenderProcessor;
-import com.jetview.core.renderer.IRenderer;
-import com.jetview.util.Removal;
 import com.jetview.util.SerializableLazyValue;
 import com.jetview.util.function.SerializableSupplier;
 
 import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Supplier;
 
 import static com.jetview.core.app.JetViewContext.*;
-import static com.jetview.core.app.JetViewContext.addStaleComponent;
 
 /**
  * @author Roman Kochergin
  */
-public abstract class Component implements Renderable, Child<Component>, Serializable {
+public class Component implements Child<Component>, Renderable, Serializable {
 
     private final SerializableLazyValue<String> lazyId = SerializableLazyValue.of(() -> getIdGenerator().generate());
 
     private Component parent;
 
-    protected final Map<String, Object> model = new ConcurrentHashMap<>();
+    private final Model model = new ComponentModel();
 
-    private final Set<IAjaxBehavior> ajaxBehaviors = ConcurrentHashMap.newKeySet();
+    private final Map<String, IEventHandler> listeners = new ConcurrentHashMap<>();
 
     public String getId() {
         return lazyId.get();
@@ -44,63 +43,23 @@ public abstract class Component implements Renderable, Child<Component>, Seriali
         this.parent = parent;
     }
 
-    public void onRequest(String event, Map<String, Object> params) {
-        ajaxBehaviors.stream()
-                .filter(ajaxBehavior -> ajaxBehavior.getEvent().equals(event))
-                .filter(ajaxBehavior -> ajaxBehavior.getEventHandler() != null)
-                .findFirst()
-                .ifPresent(ajaxBehavior -> ajaxBehavior.getEventHandler().onEvent(new Event(this, event, params)));
-    }
-
-    protected Removal<?> addValue(String viewId, SerializableSupplier<?> supplier) {
-        checkModelKey(viewId);
-        model.put(viewId, supplier);
-        return () -> {
-            model.remove(viewId);
-            return supplier;
-        };
-    }
-
-    protected Removal<IAjaxBehavior> addBehavior(IAjaxBehavior behavior) {
-        model.put(behavior.getEvent(), behavior.getCallback(this));
-        ajaxBehaviors.add(behavior);
-        return () -> {
-            model.remove(behavior.getEvent());
-            ajaxBehaviors.remove(behavior);
-            return behavior;
-        };
-    }
-
-    public Page getPage() {
-        if (this instanceof Page page) {
-            return page;
+    public void onRequest(String event, Map<String, Serializable> params) {
+        var listener = listeners.get(event);
+        if (listener != null) {
+            listener.onEvent(new Event(this, event, params));
         }
-        Optional<Component> parent;
-        do {
-            parent = getParent();
-        } while (parent.isPresent() && !(parent.get() instanceof Page));
-        return (Page) parent.orElseThrow();
-    }
-
-    public IRenderer getRenderer() {
-        return JetViewContext.getRenderer();
     }
 
     @Override
     public String render() {
-        var model = new HashMap<>(this.model);
+        var properties = new HashMap<String, Object>();
 
-        model.entrySet().stream()
-                .filter(e -> e.getValue() instanceof Supplier<?>)
-                .forEach(e -> model.put(e.getKey(), ((Supplier<?>) e.getValue()).get()));
-
-        model.entrySet().stream()
+        model.getPropertyNames().forEach(name -> properties.put(name, model.getProperty(name).get()));
+        properties.entrySet().stream()
                 .filter(e -> e.getValue() instanceof Renderable)
-                .forEach(e -> model.put(e.getKey(), ((Renderable) e.getValue()).render()));
+                .forEach(e -> properties.put(e.getKey(), ((Renderable) e.getValue()).render()));
 
-        model.put("componentId", getId());
-
-        var result = getRenderer().render(this, Map.copyOf(model));
+        var result = getRenderer().render(this, Map.copyOf(properties));
 
         for (IComponentPostRenderProcessor processor : getComponentPostRenderProcessors()) {
             result = processor.process(result, this);
@@ -109,15 +68,56 @@ public abstract class Component implements Renderable, Child<Component>, Seriali
         return result;
     }
 
-    protected final void notifyStateChange() {
-        if (isJetViewAjaxPageRequest()) {
-            addStaleComponent(this);
+    public Page getPage() {
+        if (this instanceof Page page) {
+            return page;
         }
+        Optional<Component> ancestor;
+        do {
+            ancestor = getParent();
+        } while (ancestor.isPresent() && !(ancestor.get() instanceof Page));
+        return (Page) ancestor.orElseThrow();
     }
 
-    protected void checkModelKey(String key) {
-        if (model.containsKey(key)) {
-            throw new JetViewRuntimeException("ViewId '%s' already exists".formatted(key));
+    protected void setProperty(String name, SerializableSupplier<Object> value) {
+        model.setProperty(name, value);
+    }
+
+    protected <T> T getPropertyValue(String name, Class<T> type) {
+        return model.getPropertyValue(name, type);
+    }
+
+    protected boolean hasProperty(String name) {
+        return model.hasProperty(name);
+    }
+
+    protected void removeProperty(String name) {
+        model.removeProperty(name);
+    }
+
+    protected void setListener(String name, IEventHandler eventHandler) {
+        Objects.requireNonNull(name, "name is null");
+        if (eventHandler == null) {
+            listeners.remove(name);
+        }
+        listeners.put(name, eventHandler);
+    }
+
+    protected boolean hasListener(String name) {
+        return listeners.containsKey(name);
+    }
+
+    protected void removeListener(String name) {
+        setListener(name, null);
+    }
+
+    protected final void notifyStateChange() {
+        notifyStateChange(null);
+    }
+
+    protected final void notifyStateChange(Map<String, Serializable> data) {
+        if (isJetViewAjaxPageRequest()) {
+            addStaleComponent(this, data);
         }
     }
 
@@ -134,7 +134,6 @@ public abstract class Component implements Renderable, Child<Component>, Seriali
 
     @Serial
     private void writeObject(ObjectOutputStream out) throws IOException {
-        model.entrySet().removeIf(e -> !(e.getValue() instanceof Serializable));
         out.defaultWriteObject();
     }
 

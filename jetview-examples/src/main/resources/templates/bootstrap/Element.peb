@@ -1,0 +1,4 @@
+{# @pebvariable name="tagName" type="java.lang.String" #}
+{# @pebvariable name="text" type="java.lang.String" #}
+{# @pebvariable name="attributes" type="java.util.Map<java.lang.String, java.lang.String>" #}
+<{{ tagName }} {% for attr in attributes %}{{ attr.key }}="{{ attr.value }}"{% endfor %}>{{ text }}</{{ tagName }}>

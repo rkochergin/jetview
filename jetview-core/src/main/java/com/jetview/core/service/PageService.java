@@ -15,6 +15,7 @@ import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Parameter;
@@ -23,7 +24,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static com.jetview.core.app.JetViewContext.*;
-import static org.unbescape.html.HtmlEscape.escapeHtml5;
 
 public class PageService implements IPageService {
 
@@ -84,12 +84,16 @@ public class PageService implements IPageService {
                 .findFirst()
                 .ifPresent(component -> component.onRequest(requestPayload.event(), requestPayload.data()));
 
-        var staleComponentIds = getStaleComponentIds();
+        var staleComponents = getStaleComponents();
 
-        // todo: optimize: if stale child a part of stale parent then exclude it
         var responsePayload = page.traverse()
-                .filter(c -> staleComponentIds.contains(c.getId()))
-                .map(c -> new AjaxResponsePayload(c.getId(), escapeHtml5(c.render())))
+                .filter(c -> staleComponents.containsKey(c.getId()))
+                .map(c -> {
+                    var data = staleComponents.get(c.getId());
+                    return new AjaxResponsePayload(
+                            c.getId(),
+                            data.isEmpty() ? List.of(Map.of("default_markup", c.render())) : data);
+                })
                 .toList();
 
         if (!responsePayload.isEmpty()) {
@@ -160,9 +164,9 @@ public class PageService implements IPageService {
         return PAGE_ATTRIBUTE_TMPL.formatted(appName);
     }
 
-    private record AjaxRequestPayload(String id, String event, Map<String, Object> data) {
+    private record AjaxRequestPayload(String id, String event, Map<String, Serializable> data) {
     }
 
-    private record AjaxResponsePayload(String id, String text) {
+    private record AjaxResponsePayload(String id, List<Map<String, Serializable>> data) {
     }
 }
