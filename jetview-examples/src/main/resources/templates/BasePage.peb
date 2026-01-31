@@ -25,6 +25,7 @@
             <li class="nav-item"><a href="/counter" class="nav-link {{ "/counter" == request.servletPath ? "active" : "" }}">Counter</a></li>
             <li class="nav-item"><a href="/todo" class="nav-link {{ "/todo" == request.servletPath ? "active" : "" }}">ToDo</a></li>
             <li class="nav-item"><a href="/bootstrap" class="nav-link {{ "/bootstrap" == request.servletPath ? "active" : "" }}">Bootstrap</a></li>
+            <li class="nav-item"><a href="/elements" class="nav-link {{ "/elements" == request.servletPath ? "active" : "" }}">Elements</a></li>
         </ul>
     </header>
     {% block content %}{% endblock %}

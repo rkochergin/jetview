@@ -5,6 +5,7 @@ import com.jetview.core.component.Component;
 import com.jetview.core.component.event.Event;
 import com.jetview.core.component.event.IEventHandler;
 
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -88,7 +89,9 @@ public class BsButton extends Component {
     public void setText(String text) {
         Objects.requireNonNull(text, "text must not be null");
         this.text = text;
-        notifyStateChange();
+        notifyStateChange(Map.of(
+                "property", "text",
+                "value", text));
     }
 
     public Style getStyle() {
@@ -97,8 +100,12 @@ public class BsButton extends Component {
 
     public void setStyle(Style style) {
         Objects.requireNonNull(style, "style must not be null");
+        var oldStyle = this.style;
         this.style = style;
-        notifyStateChange();
+        notifyStateChange(Map.of(
+                "property", "style",
+                "oldValue", oldStyle.value(),
+                "newValue", style.value()));
     }
 
     public Size getSize() {
@@ -106,9 +113,13 @@ public class BsButton extends Component {
     }
 
     public void setSize(Size size) {
-        Objects.requireNonNull(style, "size must not be null");
+        Objects.requireNonNull(size, "size must not be null");
+        var oldSize = this.size;
         this.size = size;
-        notifyStateChange();
+        notifyStateChange(Map.of(
+                "property", "size",
+                "oldValue", oldSize.value(),
+                "newValue", size.value()));
     }
 
     public boolean isEnabled() {
@@ -117,12 +128,17 @@ public class BsButton extends Component {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-        notifyStateChange();
+        notifyStateChange(Map.of(
+                "property", "enabled",
+                "oldValue", !enabled ? "" : "disabled",
+                "newValue", enabled ? "" : "disabled"));
     }
 
     public void setClickHandler(IEventHandler clickHandler) {
         setListener(Event.ON_CLICK, clickHandler);
-        notifyStateChange();
+        notifyStateChange(Map.of(
+                "event", "onclick",
+                "value", hasListener(Event.ON_CLICK)));
     }
 
 }

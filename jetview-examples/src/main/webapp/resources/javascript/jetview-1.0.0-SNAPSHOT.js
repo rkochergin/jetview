@@ -39,6 +39,10 @@ const JV = (() => {
         return e ? e.getAttribute(attrName) : "/";
     }
 
+    window.addEventListener('DOMContentLoaded', () => {
+        call(null, "DOMContentLoaded");
+    });
+
     return {call};
 })();
 

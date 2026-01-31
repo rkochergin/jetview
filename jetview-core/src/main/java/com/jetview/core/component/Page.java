@@ -11,6 +11,10 @@ import jakarta.servlet.http.HttpServletRequest;
  */
 public class Page extends Container {
 
+    public Page() {
+        setListener("DOMContentLoaded", _ -> traverse().forEach(Component::onLoad));
+    }
+
     public String getContentType() {
         return MimeTypes.TEXT_HTML;
     }

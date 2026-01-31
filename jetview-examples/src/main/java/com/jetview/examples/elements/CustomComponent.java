@@ -1,4 +1,4 @@
-package com.jetview.examples.bootstrap;
+package com.jetview.examples.elements;
 
 import com.jetview.core.component.Component;
 
@@ -9,12 +9,14 @@ import java.util.UUID;
 public class CustomComponent extends Component {
 
     @Override
+    protected void onLoad() {
+        setTextContent(UUID.randomUUID().toString());
+        setTitle("Custom component title");
+    }
+
+    @Override
     public void onRequest(String event, Map<String, Serializable> params) {
         System.out.println("Custom component received event: " + event + ", params: " + params);
-        if ("attach".equals(event)) {
-            setTitle("Custom component title");
-            setTextContent(UUID.randomUUID().toString());
-        }
     }
 
     public void setTitle(String title) {

@@ -50,6 +50,8 @@ public class Component implements Child<Component>, Renderable, Serializable {
         }
     }
 
+    protected void onLoad() {}
+
     @Override
     public String render() {
         var properties = new HashMap<String, Object>();

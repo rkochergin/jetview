@@ -1,0 +1,27 @@
+<div is="bs-table" class="bs-table-container" style="height: 400px; overflow-y: scroll;">
+    <table class="table table-bordered table-hover">
+        <thead class="sticky-header">
+        <tr>
+            <th>Header 1</th>
+            <th>Header 2</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Table rows will be appended here -->
+        </tbody>
+    </table>
+    <div class="d-flex m-2 justify-content-center bs-table-spinner d-none">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+</div>
+    <style>
+        .sticky-header th {
+            position: sticky; /* Position the header stickily */
+            top: 0; /* Stick it to the top of the container */
+            background-color: #007bff; /* Add a background color so content doesn't show through */
+            color: white; /* Optional: change text color for contrast */
+            z-index: 10; /* Ensure the header is above the table body content */
+        }
+    </style>

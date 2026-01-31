@@ -1,0 +1,10 @@
+{% extends "templates/bootstrap/BootstrapPage.peb" %}
+
+{% block title %} Bootstrap Toasts Page {% endblock %}
+
+{% block content %}
+
+    {{ Toasts }}
+    {{ Button }}
+
+{% endblock %}

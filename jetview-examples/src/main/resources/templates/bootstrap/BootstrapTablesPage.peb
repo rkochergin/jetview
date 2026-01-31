@@ -1,0 +1,9 @@
+{% extends "templates/bootstrap/BootstrapPage.peb" %}
+
+{% block title %} Bootstrap Table Page {% endblock %}
+
+{% block content %}
+
+    {{ Table }}
+
+{% endblock %}

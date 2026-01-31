@@ -1,0 +1,11 @@
+{% extends "templates/BasePage.peb" %}
+
+{% block title %} Elements Page {{ title }} {% endblock %}
+
+{% block content %}
+    {{ CustomComponent }}
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" src="{{ js }}/elements/elements-page.js"></script>
+{% endblock %}

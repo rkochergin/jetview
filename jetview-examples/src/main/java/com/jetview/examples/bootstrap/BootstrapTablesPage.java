@@ -7,9 +7,10 @@ import com.jetview.core.component.Page;
 /**
  * @author Roman Kochergin
  */
-@Path("/")
-@View("templates/bootstrap/BootstrapPage.peb")
-public class BootstrapPage extends Page {
-    public BootstrapPage() {
+@Path("/tables")
+@View("templates/bootstrap/BootstrapTablesPage.peb")
+public class BootstrapTablesPage extends Page {
+    public BootstrapTablesPage() {
+        setComponent("Table", new BsTable());
     }
 }

@@ -79,10 +79,14 @@ public class PageService implements IPageService {
 
         var requestPayload = objectMapper.readValue(request.getReader(), AjaxRequestPayload.class);
 
-        page.traverse()
-                .filter(component -> component.getId().equals(requestPayload.id()))
-                .findFirst()
-                .ifPresent(component -> component.onRequest(requestPayload.event(), requestPayload.data()));
+        if (requestPayload.id() == null) {
+            page.onRequest(requestPayload.event(), requestPayload.data());
+        } else {
+            page.traverse()
+                    .filter(component -> component.getId().equals(requestPayload.id()))
+                    .findFirst()
+                    .ifPresent(component -> component.onRequest(requestPayload.event(), requestPayload.data()));
+        }
 
         var staleComponents = getStaleComponents();
 

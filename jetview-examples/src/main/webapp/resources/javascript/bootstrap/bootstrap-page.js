@@ -2,12 +2,29 @@ const Bootstrap = (() => {
 
     class Button extends JVComponents.EnhanceMixin(HTMLButtonElement) {
 
-        connectedCallback() {
+        constructor() {
+            super();
             if (this.consumeBooleanAttribute("data-onclick")) {
                 this.onclick = () => this.call('onclick');
             }
         }
 
+        update(data) {
+            for (const item of data) {
+                if (item.property === "text") {
+                    this.textContent = item.value;
+                } else if (item.property === "style" || item.property === "size" || item.property === "enabled") {
+                    if (item.oldValue) {
+                        this.classList.remove(item.oldValue);
+                    }
+                    if (item.newValue) {
+                        this.classList.add(item.newValue);
+                    }
+                } else if (item.event === "onclick") {
+                    this.onclick = item.value ? () => this.call('onclick') : null;
+                }
+            }
+        }
     }
 
     class ToastContainer extends JVComponents.EnhanceMixin(HTMLDivElement) {
@@ -53,34 +70,78 @@ const Bootstrap = (() => {
 
     }
 
-    // Create a class for the element
-    class MyCustomElement extends JVComponents.EnhanceMixin(HTMLDivElement) {
+    class Table extends JVComponents.EnhanceMixin(HTMLDivElement) {
+
+        #body;
+        #spinner;
+        #observer;
+        #offset = 0;
+        #limit = 20;
 
         constructor() {
             super();
-
-            this.innerHTML = "<h1>Hello, World!</h1>";
-
-            // const shadow = this.attachShadow({mode: "open"});
-
-            // const buttonElement = document.createElement("button");
-            // buttonElement.textContent = "Hello, World!";
-            // buttonElement.onclick = () => this.setAttribute("size", "120");
-            //
-            // this.appendChild(buttonElement);
+            this.#body = this.getElementsByTagName("tbody")[0];
+            this.#spinner = this.querySelector(".bs-table-spinner");
         }
 
         connectedCallback() {
-            super.connectedCallback();
-            this.call('attach', {"jvId": this.getJvId()});
+            // Intersection Observer callback
+            const observerCallback = (entries, observer) => {
+                const [entry] = entries;
+                // If the target (loading indicator) is intersecting the viewport, fetch more data
+                if (entry.isIntersecting) {
+                    // Stop observing temporarily to prevent multiple simultaneous fetches
+                    observer.unobserve(this.#spinner);
+                    this.fetchRows();
+                }
+            };
+
+            // Set up the Intersection Observer
+            this.#observer = new IntersectionObserver(observerCallback, {
+                root: this, // The scrollable area
+                rootMargin: '100px',
+                threshold: 1.0
+            });
+
+            // Start observing the loading indicator
+            this.#observer.observe(this.#spinner);
+
+            this.fetchRows();
+        }
+
+        update(data) {
+            for (const item of data) {
+                if (item.property === "rows") {
+                    this.#body.insertAdjacentHTML("beforeend", item.markup);
+                    this.#offset += this.#limit;
+                    if (item.size === this.#limit) {
+                        this.showSpinner()
+                        this.#observer.observe(this.#spinner);
+                    }
+                }
+            }
+        }
+
+        fetchRows() {
+            this.showSpinner();
+            this.call('fetch', {"offset": this.#offset, "limit": this.#limit});
+            this.hideSpinner();
+        }
+
+        showSpinner() {
+            this.#spinner.classList.remove('d-none');
+        }
+
+        hideSpinner() {
+            this.#spinner.classList.add('d-none');
         }
 
     }
 
-    return {Button, MyCustomElement, ToastContainer};
+    return {Button, ToastContainer, Table};
 })();
 
 
 customElements.define("bs-button", Bootstrap.Button, {extends: "button"});
 customElements.define("bs-toast-container", Bootstrap.ToastContainer, {extends: "div"});
-customElements.define("bs-page-custom-component", Bootstrap.MyCustomElement, {extends: "div"});
+customElements.define("bs-table", Bootstrap.Table, {extends: "div"});
