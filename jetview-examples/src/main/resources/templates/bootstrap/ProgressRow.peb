@@ -1,0 +1,6 @@
+{# @pebvariable name="Button" type="com.jetview.examples.bootstrap.BsButton" #}
+{# @pebvariable name="Progress" type="com.jetview.examples.bootstrap.BsProgress" #}
+<div class="row my-2">
+    <div class="col-2">{{ Button }}</div>
+    <div class="col-10 align-self-center">{{ Progress }}</div>
+</div>

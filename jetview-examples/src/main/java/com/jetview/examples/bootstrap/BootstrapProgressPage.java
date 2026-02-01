@@ -22,6 +22,7 @@ public class BootstrapProgressPage extends Page {
         )));
     }
 
+    @View("templates/bootstrap/ProgressRow.peb")
     private static class Row extends Container {
 
         private final BsProgress progress;
@@ -55,14 +56,6 @@ public class BootstrapProgressPage extends Page {
                     progress.setValue(i);
                 }
             }).start();
-        }
-
-        @Override
-        public String render() {
-            return "<div class=\"row my-2\">" +
-                        "<div class=\"col-2\">%s</div>".formatted(button.render()) +
-                        "<div class=\"col-10 align-self-center\">%s</div>".formatted(progress.render()) +
-                    "</div>";
         }
     }
 }
