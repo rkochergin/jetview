@@ -14,6 +14,9 @@
         <li class="nav-item">
             <a class="nav-link" href="/bootstrap/tables">Tables</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/bootstrap/progress">Progress</a>
+        </li>
     </ul>
 
 {% endblock %}

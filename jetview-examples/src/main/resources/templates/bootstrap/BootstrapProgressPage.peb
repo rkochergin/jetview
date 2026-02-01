@@ -1,0 +1,11 @@
+{% extends "templates/bootstrap/BootstrapPage.peb" %}
+
+{% block title %} Bootstrap Progress Page {% endblock %}
+
+{% block content %}
+
+<div class="container">
+    {{ Rows }}
+</div>
+
+{% endblock %}

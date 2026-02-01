@@ -123,6 +123,10 @@ public class Component implements Child<Component>, Renderable, Serializable {
         }
     }
 
+    protected final void pushState(Map<String, Serializable> data) {
+        pushComponentData(this, data);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Component that)) return false;

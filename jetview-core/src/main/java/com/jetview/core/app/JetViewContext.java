@@ -19,7 +19,7 @@ import static com.jetview.core.app.JetViewWebApplication.getThreadContext;
  */
 public class JetViewContext {
 
-    public static final String JET_VIEW_AJAX_PAGE_SERVLET_PATH = "/jetview-ajax-page";
+    public static final String JET_VIEW_AJAX_PAGE_SERVLET_PATH = "/jetview-ajax";
 
     public static HttpServletRequest getRequest() {
         return getThreadContext().getRequest();
@@ -47,6 +47,10 @@ public class JetViewContext {
 
     public static Set<IComponentPostRenderProcessor> getComponentPostRenderProcessors() {
         return Set.copyOf(getApplicationContext().getComponentPostRenderProcessors());
+    }
+
+    public static void pushComponentData(Component component, Map<String, Serializable> data) {
+        JetViewPushServlet.sendToComponent(component.getId(), data);
     }
 
     public static void addStaleComponent(Component component, Map<String, Serializable> data) {

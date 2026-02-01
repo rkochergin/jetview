@@ -1,0 +1,10 @@
+{# @pebvariable name="value" type="double" #}
+{# @pebvariable name="percent" type="int" #}
+<div is="bs-progress" class="progress">
+    <div class="progress-bar"
+         role="progressbar"
+         style="width: {{ percent }}%;"
+         aria-valuenow="{{ value }}"
+         aria-valuemin="{{ min }}"
+         aria-valuemax="{{ max }}">{{ percent }}%</div>
+</div>

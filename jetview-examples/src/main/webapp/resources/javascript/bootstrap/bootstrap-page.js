@@ -138,10 +138,50 @@ const Bootstrap = (() => {
 
     }
 
-    return {Button, ToastContainer, Table};
+    class Progress extends JVComponents.EnhanceMixin(HTMLDivElement) {
+
+        #progressBar;
+        #percent = 0;
+
+        constructor() {
+            super();
+            this.#progressBar = this.querySelector(".progress-bar");
+            const eventSource = new EventSource(`${JV.getPushUri()}?id=${this.getJvId()}`);
+            eventSource.addEventListener('error', event => {
+                if (event.target.readyState === EventSource.CONNECTING) {
+                    const interval = setInterval(() => {
+                        if (eventSource.readyState === EventSource.OPEN) {
+                            clearInterval(interval);
+                        } else if (this.#percent < 100) {
+                            this.call("state");
+                        }
+                    }, 1000);
+                }
+
+            });
+            eventSource.addEventListener('message', event => {
+                const data = JSON.parse(event.data);
+                if (data.property === "state") {
+                    const oldPercent = this.#percent;
+                    this.#percent = data.percent;
+                    this.#progressBar.setAttribute("aria-valuemin", `${data.min}`);
+                    this.#progressBar.setAttribute("aria-valuemax", `${data.max}`);
+                    this.#progressBar.setAttribute("aria-valuenow", `${data.value}`);
+                    this.#progressBar.setAttribute("style", `width: ${this.#percent}%`);
+                    this.#progressBar.textContent = `${this.#percent}%`;
+                    if (this.#percent > oldPercent && this.#percent >= 100) {
+                        this.call("complete");
+                    }
+                }
+            })
+        }
+    }
+
+    return {Button, ToastContainer, Table, Progress};
 })();
 
 
 customElements.define("bs-button", Bootstrap.Button, {extends: "button"});
 customElements.define("bs-toast-container", Bootstrap.ToastContainer, {extends: "div"});
 customElements.define("bs-table", Bootstrap.Table, {extends: "div"});
+customElements.define("bs-progress", Bootstrap.Progress, {extends: "div"});

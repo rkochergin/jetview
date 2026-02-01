@@ -23,8 +23,7 @@ const JV = (() => {
                 // location.reload();
             }
         };
-        const uri = (servletPath.endsWith("/") ? servletPath : servletPath + "/") + "jetview-ajax-page";
-        xHttp.open("POST", uri, true);
+        xHttp.open("POST", getUri(), true);
         xHttp.setRequestHeader("Content-Type", "application/json");
         xHttp.send(JSON.stringify({"id": id, "event": event, "data": data}));
     }
@@ -39,10 +38,18 @@ const JV = (() => {
         return e ? e.getAttribute(attrName) : "/";
     }
 
+    function getUri(){
+        return (servletPath.endsWith("/") ? servletPath : servletPath + "/") + "jetview-ajax";
+    }
+
+    function getPushUri(){
+        return "/jetview-push";
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
         call(null, "DOMContentLoaded");
     });
 
-    return {call};
+    return {call, getPushUri};
 })();
 
