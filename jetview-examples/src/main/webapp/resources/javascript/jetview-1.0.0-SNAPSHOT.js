@@ -1,10 +1,13 @@
 const JV = (() => {
     const servletPath = getServletPath();
 
-    const call = (id, event, data, callback) => {
+    const call = (id, event, data) => {
         const xHttp = new XMLHttpRequest();
         xHttp.onload = function () {
             try {
+                if (!this.responseText) {
+                    return;
+                }
                 const json = JSON.parse(this.responseText);
                 json.forEach((item) => {
                     const e = findElementByJetViewId(item.id);
@@ -15,9 +18,6 @@ const JV = (() => {
                         e.update(list);
                     }
                 })
-                if (callback) {
-                    callback();
-                }
             } catch (e) {
                 console.warn(e);
                 // location.reload();
