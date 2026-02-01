@@ -33,12 +33,12 @@ public class BootstrapProgressPage extends Page {
             button = new BsButton("Run task");
             button.setClickHandler(_ -> {
                 int min = 0;
-                int max = 900;
+                int max = 333;
                 progress.setMin(min);
                 progress.setMax(max);
                 progress.setValue(min);
                 button.setEnabled(false);
-                runTask(min, max, new Random().nextInt(50));
+                runTask(min, max, new Random().nextInt(100));
             });
             progress.setCompleteHandler(_ -> button.setEnabled(true));
             setComponent("Button", button);
