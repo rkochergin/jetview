@@ -57,7 +57,6 @@ public class JetViewPushServlet extends HttpServlet {
         });
 
         CLIENTS.put(context, req.getParameter("id"));
-        System.out.println(context + " : " + req.getParameter("id") + " : " + CLIENTS.size());
     }
 
     public static void sendToComponent(String componentId, Map<String, Serializable> data) {
