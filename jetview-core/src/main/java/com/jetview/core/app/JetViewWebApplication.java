@@ -86,10 +86,11 @@ public class JetViewWebApplication {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         var path = JetViewRequest.getPathInfo();
         var pageService = applicationContext.getResourceFactory().getResource(IPageService.class);
+        pageService.getPage(request)
+                .ifPresent(JetViewPushServlet::clearClients);
         var pageClass = pageService.findPageClass(applicationConfig.pageScanPackages(), request)
                 .orElseThrow(() -> new JetViewRuntimeException("Page not found for path: " + path));
         pageService.renderPage(pageClass, request, response);
-        JetViewPushServlet.clearClients();
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {

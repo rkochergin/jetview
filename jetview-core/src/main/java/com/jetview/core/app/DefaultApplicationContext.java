@@ -8,8 +8,8 @@ import com.jetview.core.interceptor.IPageInterceptor;
 import com.jetview.core.processor.*;
 import com.jetview.core.renderer.IRenderer;
 import com.jetview.core.renderer.PebbleTemplateRenderer;
-import com.jetview.util.generator.IdGenerator;
-import com.jetview.util.generator.IntSequenceStringIdGenerator;
+import com.jetview.util.generator.LongSequenceUniqueStringValueGenerator;
+import com.jetview.util.generator.UniqueValueGenerator;
 import io.pebbletemplates.pebble.PebbleEngine;
 
 import java.util.Set;
@@ -22,7 +22,7 @@ public class DefaultApplicationContext implements ApplicationContext {
     private final IResourceFactory resourceFactory;
     private final IConverterFactory<String, Object> converterFactory;
     private final IRenderer renderer;
-    private final IdGenerator<String> idGenerator;
+    private final UniqueValueGenerator<String> uniqueValueGenerator;
     private final Set<IPageInterceptor> pageInterceptors;
     private final Set<IComponentPostRenderProcessor> componentPostRenderProcessors;
 
@@ -30,7 +30,7 @@ public class DefaultApplicationContext implements ApplicationContext {
         this.resourceFactory = builder.resourceFactory;
         this.converterFactory = builder.converterFactory;
         this.renderer = builder.renderer;
-        this.idGenerator = builder.idGenerator;
+        this.uniqueValueGenerator = builder.uniqueValueGenerator;
         this.pageInterceptors = builder.pageInterceptors;
         this.componentPostRenderProcessors = builder.componentPostRenderProcessors;
     }
@@ -40,7 +40,7 @@ public class DefaultApplicationContext implements ApplicationContext {
         private IResourceFactory resourceFactory;
         private IConverterFactory<String, Object> converterFactory;
         private IRenderer renderer;
-        private IdGenerator<String> idGenerator;
+        private UniqueValueGenerator<String> uniqueValueGenerator;
         private Set<IPageInterceptor> pageInterceptors;
         private Set<IComponentPostRenderProcessor> componentPostRenderProcessors;
 
@@ -50,7 +50,7 @@ public class DefaultApplicationContext implements ApplicationContext {
             this.renderer = new PebbleTemplateRenderer(new PebbleEngine.Builder()
                     .autoEscaping(false)
                     .build());
-            this.idGenerator = new IntSequenceStringIdGenerator();
+            this.uniqueValueGenerator = new LongSequenceUniqueStringValueGenerator();
             this.pageInterceptors = Set.of();
             this.componentPostRenderProcessors = Set.of(
                     new RemoveJavaScriptComponentPostRenderProcessor(),
@@ -73,8 +73,8 @@ public class DefaultApplicationContext implements ApplicationContext {
             return this;
         }
 
-        public Builder idGenerator(IdGenerator<String> idGenerator) {
-            this.idGenerator = idGenerator;
+        public Builder uniqueValueGenerator(UniqueValueGenerator<String> uniqueValueGenerator) {
+            this.uniqueValueGenerator = uniqueValueGenerator;
             return this;
         }
 
@@ -109,8 +109,8 @@ public class DefaultApplicationContext implements ApplicationContext {
     }
 
     @Override
-    public IdGenerator<String> getIdGenerator() {
-        return idGenerator;
+    public UniqueValueGenerator<String> getUniqueValueGenerator() {
+        return uniqueValueGenerator;
     }
 
     @Override

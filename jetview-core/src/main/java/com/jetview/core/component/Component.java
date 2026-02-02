@@ -22,7 +22,7 @@ import static com.jetview.core.app.JetViewContext.*;
  */
 public class Component implements Child<Component>, Renderable, Serializable {
 
-    private final SerializableLazyValue<String> lazyId = SerializableLazyValue.of(() -> getIdGenerator().generate());
+    private final SerializableLazyValue<String> lazyId = SerializableLazyValue.of(() -> getUniqueValueGenerator().generate());
 
     private Component parent;
 

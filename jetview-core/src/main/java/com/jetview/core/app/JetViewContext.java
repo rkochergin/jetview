@@ -6,7 +6,7 @@ import com.jetview.core.factory.IResourceFactory;
 import com.jetview.core.interceptor.IPageInterceptor;
 import com.jetview.core.processor.IComponentPostRenderProcessor;
 import com.jetview.core.renderer.IRenderer;
-import com.jetview.util.generator.IdGenerator;
+import com.jetview.util.generator.UniqueValueGenerator;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.io.Serializable;
@@ -37,8 +37,8 @@ public class JetViewContext {
         return getApplicationContext().getRenderer();
     }
 
-    public static IdGenerator<String> getIdGenerator() {
-        return getApplicationContext().getIdGenerator();
+    public static UniqueValueGenerator<String> getUniqueValueGenerator() {
+        return getApplicationContext().getUniqueValueGenerator();
     }
 
     public static Set<IPageInterceptor> getPageInterceptors() {

@@ -3,6 +3,6 @@ package com.jetview.util.generator;
 /**
  * @author Roman Kochergin
  */
-public interface IdGenerator<T> {
+public interface UniqueValueGenerator<T> {
     T generate();
 }

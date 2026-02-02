@@ -5,7 +5,7 @@ import com.jetview.core.factory.IResourceFactory;
 import com.jetview.core.interceptor.IPageInterceptor;
 import com.jetview.core.processor.IComponentPostRenderProcessor;
 import com.jetview.core.renderer.IRenderer;
-import com.jetview.util.generator.IdGenerator;
+import com.jetview.util.generator.UniqueValueGenerator;
 
 import java.util.Set;
 
@@ -20,7 +20,7 @@ public interface ApplicationContext {
 
     IRenderer getRenderer();
 
-    IdGenerator<String> getIdGenerator();
+    UniqueValueGenerator<String> getUniqueValueGenerator();
 
     Set<IPageInterceptor> getPageInterceptors();
 
