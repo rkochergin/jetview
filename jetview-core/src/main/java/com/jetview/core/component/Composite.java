@@ -17,7 +17,7 @@ public class Composite<T extends Component> extends Component
     }
 
     public Composite(Collection<T> components) {
-        this.components.addAll(components);
+        add(components);
     }
 
     @SafeVarargs
@@ -27,10 +27,13 @@ public class Composite<T extends Component> extends Component
 
     public void add(Collection<T> components) {
         this.components.addAll(components);
+        components.forEach(c -> c.setParent(this));
     }
 
     public boolean removeIf(Predicate<T> filter) {
-        return components.removeIf(filter);
+        var list = components.stream().filter(filter).toList();
+        list.forEach(c -> c.setParent(null));
+        return components.removeAll(list);
     }
 
     @Override
