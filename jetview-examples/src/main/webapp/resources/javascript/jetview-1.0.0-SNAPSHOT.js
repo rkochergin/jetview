@@ -38,18 +38,115 @@ const JV = (() => {
         return e ? e.getAttribute(attrName) : "/";
     }
 
-    function getUri(){
+    function getUri() {
         return (servletPath.endsWith("/") ? servletPath : servletPath + "/") + "jetview-ajax";
     }
 
-    function getPushUri(){
+    function getPushUri() {
         return "/jetview-push";
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
+    function getPushSource() {
+        return pushSource;
+    }
+
+    addEventListener('DOMContentLoaded', () => {
         call(null, "DOMContentLoaded");
     });
 
-    return {call, getPushUri};
+    class PushSource {
+
+        #eventSource;
+        #subscribers;
+        #errorListeners;
+
+        constructor(pushUri) {
+            this.#subscribers = new Map();
+            this.#errorListeners = [];
+            const jvId = document.body.getAttribute("data-jv-id");
+            this.#eventSource = new EventSource(`${pushUri}?id=${jvId}`);
+            this.#eventSource.addEventListener("message", event => {
+                const data = JSON.parse(event.data);
+                const componentId = data.id;
+                const message = data.message;
+                const subscriber = this.#subscribers.get(componentId);
+                if (subscriber) {
+                    subscriber(message);
+                }
+            });
+            this.#eventSource.addEventListener("error", event => {
+                this.#errorListeners.forEach(listener => listener(event));
+            });
+        }
+
+        subscribe(enhanceMixin, listener) {
+            this.#subscribers.set(enhanceMixin.getJvId(), listener);
+        }
+
+        onError(listener) {
+            this.#errorListeners.push(listener);
+        }
+    }
+
+    const EnhanceMixin = (superclass) => {
+        return class extends superclass {
+
+            getJvId() {
+                return this.dataset.jvId;
+            }
+
+            connectedCallback() {
+                console.log(`Element '${this.getJvId()}' connected to DOM.`);
+            }
+
+            disconnectedCallback() {
+                console.log(`Element '${this.getJvId()}' disconnected from DOM.`);
+            }
+
+            connectedMoveCallback() {
+                console.log(`Element '${this.getJvId()}' moved with moveBefore()`);
+            }
+
+            adoptedCallback() {
+                console.log(`Element '${this.getJvId()}' moved to a new parent.`);
+            }
+
+            attributeChangedCallback(name, oldValue, newValue) {
+                console.log(`Element '${this.getJvId()}' attribute '${name}' has changed from '${oldValue}' to '${newValue}'.`);
+            }
+
+            update(data) {
+                console.log(`Element '${this.getJvId()}' update data '${JSON.stringify(data)}' received.`);
+            }
+
+            call(event, data) {
+                JV.call(this.getJvId(), event, data);
+            }
+
+            consumeAttribute(attributeName) {
+                const attribute = this.getAttribute(attributeName);
+                this.removeAttribute(attributeName);
+                return attribute;
+            }
+
+            consumeBooleanAttribute(attributeName) {
+                const result = this.hasAttribute(attributeName);
+                this.removeAttribute(attributeName);
+                return result;
+            }
+
+            selectKeys(obj, ...keys) {
+                return Object.fromEntries(
+                    keys
+                        .filter(key => key in obj)
+                        .map(key => [key, obj[key]])
+                );
+            }
+        };
+    };
+
+    const pushSource = new PushSource(getPushUri());
+
+    return {call, EnhanceMixin, getPushSource};
 })();
 

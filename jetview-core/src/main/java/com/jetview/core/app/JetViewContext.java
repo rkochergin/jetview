@@ -9,7 +9,6 @@ import com.jetview.core.renderer.IRenderer;
 import com.jetview.util.generator.UniqueValueGenerator;
 import jakarta.servlet.http.HttpServletRequest;
 
-import java.io.Serializable;
 import java.util.*;
 
 import static com.jetview.core.app.JetViewWebApplication.getThreadContext;
@@ -49,15 +48,16 @@ public class JetViewContext {
         return Set.copyOf(getApplicationContext().getComponentPostRenderProcessors());
     }
 
-    public static void pushComponentData(Component component, Map<String, Serializable> data) {
-        JetViewPushServlet.sendToComponent(component.getId(), data);
+    public static void pushComponentData(Component component, Map<String, Object> data) {
+        var message = Map.of("id", component.getId(), "message", data);
+        JetViewPushServlet.sendToClient(component.getPage().getId(), message);
     }
 
-    public static void addStaleComponent(Component component, Map<String, Serializable> data) {
+    public static void addStaleComponent(Component component, Map<String, Object> data) {
         var staleComponents = getThreadContext().getStaleComponents();
         staleComponents.compute(component.getId(), (k, v) -> {
             if (v == null) {
-                var list = new ArrayList<Map<String, Serializable>>();
+                var list = new ArrayList<Map<String, Object>>();
                 if (Objects.nonNull(data)) {
                     list.add(data);
                 }
@@ -71,7 +71,7 @@ public class JetViewContext {
         });
     }
 
-    public static Map<String, List<Map<String, Serializable>>> getStaleComponents() {
+    public static Map<String, List<Map<String, Object>>> getStaleComponents() {
         return Map.copyOf(getThreadContext().getStaleComponents());
     }
 

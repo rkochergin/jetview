@@ -2,7 +2,6 @@ package com.jetview.examples.elements;
 
 import com.jetview.core.component.Component;
 
-import java.io.Serializable;
 import java.util.Map;
 import java.util.UUID;
 
@@ -15,7 +14,7 @@ public class CustomComponent extends Component {
     }
 
     @Override
-    public void onRequest(String event, Map<String, Serializable> params) {
+    public void onRequest(String event, Map<String, Object> params) {
         System.out.println("Custom component received event: " + event + ", params: " + params);
     }
 

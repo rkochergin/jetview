@@ -1,6 +1,6 @@
 const Bootstrap = (() => {
 
-    class Button extends JVComponents.EnhanceMixin(HTMLButtonElement) {
+    class Button extends JV.EnhanceMixin(HTMLButtonElement) {
 
         constructor() {
             super();
@@ -27,7 +27,7 @@ const Bootstrap = (() => {
         }
     }
 
-    class ToastContainer extends JVComponents.EnhanceMixin(HTMLDivElement) {
+    class ToastContainer extends JV.EnhanceMixin(HTMLDivElement) {
 
         static Position = {
             TOP_LEFT: "top-0 start-0",
@@ -70,7 +70,7 @@ const Bootstrap = (() => {
 
     }
 
-    class Table extends JVComponents.EnhanceMixin(HTMLDivElement) {
+    class Table extends JV.EnhanceMixin(HTMLDivElement) {
 
         #body;
         #spinner;
@@ -138,9 +138,8 @@ const Bootstrap = (() => {
 
     }
 
-    class Progress extends JVComponents.EnhanceMixin(HTMLDivElement) {
+    class Progress extends JV.EnhanceMixin(HTMLDivElement) {
 
-        #eventSource;
         #progressBar;
         #percent = 0;
 
@@ -150,14 +149,10 @@ const Bootstrap = (() => {
         }
 
         connectedCallback() {
-            this.#eventSource = new EventSource(`${JV.getPushUri()}?id=${this.getJvId()}`);
-            this.#eventSource.addEventListener('open', event => {
-                console.log("sse channel open:", event);
-            });
-            this.#eventSource.addEventListener('error', event => {
+            JV.getPushSource().onError(event => {
                 if (event.target.readyState === EventSource.CONNECTING) {
                     const interval = setInterval(() => {
-                        if (this.#eventSource.readyState === EventSource.OPEN) {
+                        if (event.target.readyState === EventSource.OPEN) {
                             clearInterval(interval);
                         } else if (this.#percent < 100) {
                             this.call("state");
@@ -165,8 +160,7 @@ const Bootstrap = (() => {
                     }, 1000);
                 }
             });
-            this.#eventSource.addEventListener('message', event => {
-                const data = JSON.parse(event.data);
+            JV.getPushSource().subscribe(this, data => {
                 if (data.property === "state") {
                     const oldPercent = this.#percent;
                     this.#percent = data.percent;
@@ -183,7 +177,7 @@ const Bootstrap = (() => {
         }
 
         disconnectedCallback() {
-            this.#eventSource.close();
+            // this.#eventSource.close();
         }
     }
 

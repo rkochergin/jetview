@@ -1,6 +1,6 @@
 (() => {
 
-    class AddForm extends JVComponents.EnhanceMixin(HTMLFormElement) {
+    class AddForm extends JV.EnhanceMixin(HTMLFormElement) {
         constructor() {
             super();
             this.addEventListener('submit', evt => this.submit(evt));
@@ -15,7 +15,7 @@
         }
     }
 
-    class TodoListItem extends JVComponents.EnhanceMixin(HTMLLIElement) {
+    class TodoListItem extends JV.EnhanceMixin(HTMLLIElement) {
 
         #form
         #inputField;

@@ -1,6 +1,6 @@
 const Elements = (() => {
 
-    class Button extends JVComponents.EnhanceMixin(HTMLButtonElement) {
+    class Button extends JV.EnhanceMixin(HTMLButtonElement) {
 
         static #LISTENERS_NS = "data-jv-listener-";
 

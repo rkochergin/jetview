@@ -2,11 +2,13 @@ package com.jetview.examples.bootstrap;
 
 import com.jetview.core.annotation.Path;
 import com.jetview.core.annotation.View;
+import com.jetview.core.component.Component;
 import com.jetview.core.component.Composite;
 import com.jetview.core.component.Container;
 import com.jetview.core.component.Page;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 /**
@@ -18,6 +20,7 @@ public class BootstrapProgressPage extends Page {
 
     public BootstrapProgressPage() {
         setComponent("Rows", new Composite<>(List.of(
+                new Row(), new Row(), new Row(), new Row(), new Row(),
                 new Row(), new Row(), new Row(), new Row(), new Row()
         )));
     }
@@ -43,6 +46,11 @@ public class BootstrapProgressPage extends Page {
             progress.setCompleteHandler(_ -> button.setEnabled(true));
             setComponent("Button", button);
             setComponent("Progress", progress);
+        }
+
+        @Override
+        public Optional<Component> getParent() {
+            return super.getParent();
         }
 
         private void runTask(int min, int max, int sleep) {

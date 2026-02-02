@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.PrintWriter;
-import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -89,7 +88,7 @@ public class JetViewPushServlet extends HttpServlet {
                 .log();
     }
 
-    public static void sendToComponent(String componentId, Map<String, Serializable> data) {
+    public static void sendToClient(String componentId, Map<String, Object> data) {
         CLIENTS.entrySet().stream()
                 .filter(entry -> entry.getValue().equals(componentId))
                 .map(Map.Entry::getKey)

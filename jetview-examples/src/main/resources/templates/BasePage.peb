@@ -32,7 +32,6 @@
 </div>
 <script type="text/javascript" src="{{ js }}/bootstrap.bundle.min.js"></script>
 <script type="text/javascript" src="{{ js }}/jetview-1.0.0-SNAPSHOT.js"></script>
-<script type="text/javascript" src="{{ js }}/jetview-components-1.0.0-SNAPSHOT.js"></script>
 {% block javascript %}{% endblock %}
 </body>
 </html>

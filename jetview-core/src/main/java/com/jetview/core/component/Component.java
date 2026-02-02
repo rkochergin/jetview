@@ -43,7 +43,7 @@ public class Component implements Child<Component>, Renderable, Serializable {
         this.parent = parent;
     }
 
-    public void onRequest(String event, Map<String, Serializable> params) {
+    public void onRequest(String event, Map<String, Object> params) {
         var listener = listeners.get(event);
         if (listener != null) {
             listener.onEvent(new Event(this, event, params));
@@ -118,13 +118,13 @@ public class Component implements Child<Component>, Renderable, Serializable {
         notifyStateChange(null);
     }
 
-    protected final void notifyStateChange(Map<String, Serializable> data) {
+    protected final void notifyStateChange(Map<String, Object> data) {
         if (isJetViewAjaxPageRequest()) {
             addStaleComponent(this, data);
         }
     }
 
-    protected final void pushState(Map<String, Serializable> data) {
+    protected final void pushState(Map<String, Object> data) {
         pushComponentData(this, data);
     }
 

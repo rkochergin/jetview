@@ -15,7 +15,6 @@ import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Parameter;
@@ -168,9 +167,9 @@ public class PageService implements IPageService {
         return PAGE_ATTRIBUTE_TMPL.formatted(appName);
     }
 
-    private record AjaxRequestPayload(String id, String event, Map<String, Serializable> data) {
+    private record AjaxRequestPayload(String id, String event, Map<String, Object> data) {
     }
 
-    private record AjaxResponsePayload(String id, List<Map<String, Serializable>> data) {
+    private record AjaxResponsePayload(String id, List<Map<String, Object>> data) {
     }
 }
