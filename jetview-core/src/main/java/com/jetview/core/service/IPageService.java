@@ -14,5 +14,5 @@ public interface IPageService {
 
     Optional<Page> getPage(HttpServletRequest request);
 
-    void renderAjaxPage(HttpServletRequest request, HttpServletResponse response) throws IOException;
+    void processAjaxRequest(HttpServletRequest request, HttpServletResponse response) throws IOException;
 }

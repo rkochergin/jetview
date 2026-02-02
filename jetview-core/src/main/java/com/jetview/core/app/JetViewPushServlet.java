@@ -9,6 +9,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.PrintWriter;
 import java.io.Serializable;
@@ -21,7 +23,10 @@ import java.util.concurrent.ConcurrentHashMap;
 @WebServlet(urlPatterns = "/jetview-push", asyncSupported = true)
 public class JetViewPushServlet extends HttpServlet {
 
+    private static final Logger logger = LoggerFactory.getLogger(JetViewPushServlet.class);
+
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
     private static final Map<AsyncContext, String> CLIENTS = new ConcurrentHashMap<>();
 
     @Override
@@ -36,12 +41,28 @@ public class JetViewPushServlet extends HttpServlet {
 
             @Override
             public void onComplete(AsyncEvent event) {
-                CLIENTS.remove(context);
+                var ctx = event.getAsyncContext();
+                var clientId = CLIENTS.remove(ctx);
+                if (clientId != null) {
+                    logger.atDebug()
+                            .setMessage(() -> "Push client '{}' completed, total size: {}")
+                            .addArgument(clientId)
+                            .addArgument(CLIENTS.size())
+                            .log();
+                }
             }
 
             @Override
             public void onTimeout(AsyncEvent event) {
-                CLIENTS.remove(context);
+                var ctx = event.getAsyncContext();
+                var clientId = CLIENTS.remove(ctx);
+                if (clientId != null) {
+                    logger.atDebug()
+                            .setMessage(() -> "Push client '{}' timeout, total size: {}")
+                            .addArgument(clientId)
+                            .addArgument(CLIENTS.size())
+                            .log();
+                }
                 context.complete();
             }
 
@@ -56,7 +77,14 @@ public class JetViewPushServlet extends HttpServlet {
             }
         });
 
-        CLIENTS.put(context, req.getParameter("id"));
+        var clientId = req.getParameter("id");
+        CLIENTS.put(context, clientId);
+
+        logger.atDebug()
+                .setMessage(() -> "Push client '{}' connected, total size: {}")
+                .addArgument(clientId)
+                .addArgument(CLIENTS.size())
+                .log();
     }
 
     public static void sendToComponent(String componentId, Map<String, Serializable> data) {
@@ -74,4 +102,10 @@ public class JetViewPushServlet extends HttpServlet {
                     }
                 });
     }
+
+    public static void clearClients() {
+        CLIENTS.keySet().forEach(AsyncContext::complete);
+        CLIENTS.clear();
+    }
+
 }

@@ -140,26 +140,32 @@ const Bootstrap = (() => {
 
     class Progress extends JVComponents.EnhanceMixin(HTMLDivElement) {
 
+        #eventSource;
         #progressBar;
         #percent = 0;
 
         constructor() {
             super();
             this.#progressBar = this.querySelector(".progress-bar");
-            const eventSource = new EventSource(`${JV.getPushUri()}?id=${this.getJvId()}`);
-            eventSource.addEventListener('error', event => {
+        }
+
+        connectedCallback() {
+            this.#eventSource = new EventSource(`${JV.getPushUri()}?id=${this.getJvId()}`);
+            this.#eventSource.addEventListener('open', event => {
+                console.log("sse channel open:", event);
+            });
+            this.#eventSource.addEventListener('error', event => {
                 if (event.target.readyState === EventSource.CONNECTING) {
                     const interval = setInterval(() => {
-                        if (eventSource.readyState === EventSource.OPEN) {
+                        if (this.#eventSource.readyState === EventSource.OPEN) {
                             clearInterval(interval);
                         } else if (this.#percent < 100) {
                             this.call("state");
                         }
                     }, 1000);
                 }
-
             });
-            eventSource.addEventListener('message', event => {
+            this.#eventSource.addEventListener('message', event => {
                 const data = JSON.parse(event.data);
                 if (data.property === "state") {
                     const oldPercent = this.#percent;
@@ -174,6 +180,10 @@ const Bootstrap = (() => {
                     }
                 }
             })
+        }
+
+        disconnectedCallback() {
+            this.#eventSource.close();
         }
     }
 

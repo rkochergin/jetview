@@ -89,13 +89,14 @@ public class JetViewWebApplication {
         var pageClass = pageService.findPageClass(applicationConfig.pageScanPackages(), request)
                 .orElseThrow(() -> new JetViewRuntimeException("Page not found for path: " + path));
         pageService.renderPage(pageClass, request, response);
+        JetViewPushServlet.clearClients();
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (isJetViewAjaxPageRequest()) {
             var pageService = applicationContext.getResourceFactory().getResource(IPageService.class);
             if (pageService.getPage(request).isPresent()) {
-                pageService.renderAjaxPage(request, response);
+                pageService.processAjaxRequest(request, response);
             } else {
                 logger.atWarn()
                         .setMessage(() -> "Page is not found")

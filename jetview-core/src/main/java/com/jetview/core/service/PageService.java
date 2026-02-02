@@ -74,7 +74,7 @@ public class PageService implements IPageService {
     }
 
     @Override
-    public void renderAjaxPage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void processAjaxRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
         var page = getPage(request).orElseThrow();
 
         var requestPayload = objectMapper.readValue(request.getReader(), AjaxRequestPayload.class);
