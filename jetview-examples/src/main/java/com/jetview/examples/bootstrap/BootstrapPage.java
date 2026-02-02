@@ -12,9 +12,7 @@ import com.jetview.core.component.Page;
 public class BootstrapPage extends Page {
     public BootstrapPage() {
         BsHorizontalLayout horizontalLayout = new BsHorizontalLayout();
-        horizontalLayout.add(new BsButton("Button"));
-        horizontalLayout.add(new BsProgress());
-        horizontalLayout.add(new BsButton("Button"));
+        horizontalLayout.add(new BsButton("Left button"), new BsProgress(), new BsButton("Right button"));
         setComponent("HorizontalLayout", horizontalLayout);
     }
 }

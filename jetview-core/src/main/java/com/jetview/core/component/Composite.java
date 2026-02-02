@@ -1,8 +1,6 @@
 package com.jetview.core.component;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -18,12 +16,17 @@ public class Composite<T extends Component> extends Component
     public Composite() {
     }
 
-    public Composite(List<T> components) {
+    public Composite(Collection<T> components) {
         this.components.addAll(components);
     }
 
-    public void add(T component) {
-        components.add(component);
+    @SafeVarargs
+    public final void add(T... components) {
+        add(Arrays.asList(components));
+    }
+
+    public void add(Collection<T> components) {
+        this.components.addAll(components);
     }
 
     public boolean removeIf(Predicate<T> filter) {
