@@ -50,7 +50,8 @@ public class Component implements Child<Component>, Renderable, Serializable {
         }
     }
 
-    protected void onLoad() {}
+    protected void onLoad() {
+    }
 
     @Override
     public String render() {
@@ -74,9 +75,9 @@ public class Component implements Child<Component>, Renderable, Serializable {
         if (this instanceof Page page) {
             return page;
         }
-        Optional<Component> ancestor;
+        Optional<Component> ancestor = Optional.of(this);
         do {
-            ancestor = getParent();
+            ancestor = ancestor.get().getParent();
         } while (ancestor.isPresent() && !(ancestor.get() instanceof Page));
         return (Page) ancestor.orElseThrow();
     }
