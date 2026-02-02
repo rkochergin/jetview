@@ -1,0 +1,12 @@
+{# @pebvariable name="components" type="java.util.List<com.jetview.core.component.Component>" #}
+<div class="container">
+    <div class="row g-3 align-items-center">
+        {% for component in components %}
+            {% if loop.index == 0 or loop.index == 2 %}
+                <div class="col-auto">{{ component.render() }}</div>
+                {% else %}
+                <div class="col">{{ component.render() }}</div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
