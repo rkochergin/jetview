@@ -143,6 +143,7 @@ const Bootstrap = (() => {
         #progressBar;
         #errorListener;
         #percent = 0;
+        #completed = true;
 
         constructor() {
             super();
@@ -159,18 +160,19 @@ const Bootstrap = (() => {
                     this.#progressBar.setAttribute("aria-valuenow", `${data.value}`);
                     this.#progressBar.setAttribute("style", `width: ${this.#percent}%`);
                     this.#progressBar.textContent = `${this.#percent}%`;
-                    if (this.#percent > oldPercent && this.#percent >= 100) {
+                    this.#completed = this.#percent > oldPercent && this.#percent >= 100;
+                    if (this.#completed) {
                         this.call("complete");
                     }
                 }
             })
             this.#errorListener = event => {
                 if (event.target.readyState === EventSource.CONNECTING) {
-                    if (this.#percent < 100) {
+                    if (!this.#completed) {
                         const interval = setInterval(() => {
                             if (event.target.readyState === EventSource.OPEN) {
                                 clearInterval(interval);
-                            } else if (this.#percent < 100) {
+                            } else if (!this.#completed) {
                                 this.call("state");
                             }
                         }, 1000);
