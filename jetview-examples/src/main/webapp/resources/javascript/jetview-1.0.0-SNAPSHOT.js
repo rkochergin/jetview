@@ -47,7 +47,10 @@ const JV = (() => {
     }
 
     function getPushSource() {
-        return pushSource;
+        if (!this.pushSource) {
+            this.pushSource = new PushSource(getPushUri());
+        }
+        return this.pushSource;
     }
 
     addEventListener('DOMContentLoaded', () => {
@@ -62,7 +65,7 @@ const JV = (() => {
 
         constructor(pushUri) {
             this.#subscribers = new Map();
-            this.#errorListeners = [];
+            this.#errorListeners = new Set();
             const jvId = document.body.getAttribute("data-jv-id");
             this.#eventSource = new EventSource(`${pushUri}?id=${jvId}`);
             this.#eventSource.addEventListener("message", event => {
@@ -83,8 +86,16 @@ const JV = (() => {
             this.#subscribers.set(enhanceMixin.getJvId(), listener);
         }
 
-        onError(listener) {
-            this.#errorListeners.push(listener);
+        unsubscribe(enhanceMixin) {
+            this.#subscribers.delete(enhanceMixin.getJvId());
+        }
+
+        addErrorListener(listener) {
+            this.#errorListeners.add(listener);
+        }
+
+        removeErrorListener(listener) {
+            this.#errorListeners.delete(listener);
         }
     }
 
@@ -144,8 +155,6 @@ const JV = (() => {
             }
         };
     };
-
-    const pushSource = new PushSource(getPushUri());
 
     return {call, EnhanceMixin, getPushSource};
 })();
