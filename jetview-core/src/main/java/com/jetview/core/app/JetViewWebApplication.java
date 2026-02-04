@@ -87,7 +87,7 @@ public class JetViewWebApplication {
         var path = JetViewRequest.getPathInfo();
         var pageService = applicationContext.getResourceFactory().getResource(IPageService.class);
         pageService.getPage(request)
-                .ifPresent(JetViewPushServlet::clearClients);
+                .ifPresent(page -> JetViewPushServlet.removeClient(page.getId()));
         var pageClass = pageService.findPageClass(applicationConfig.pageScanPackages(), request)
                 .orElseThrow(() -> new JetViewRuntimeException("Page not found for path: " + path));
         pageService.renderPage(pageClass, request, response);

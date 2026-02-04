@@ -1,8 +1,6 @@
 package com.jetview.core.app;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jetview.core.component.Component;
-import com.jetview.core.component.Page;
 import com.jetview.util.MimeTypes;
 import jakarta.servlet.AsyncContext;
 import jakarta.servlet.AsyncEvent;
@@ -88,9 +86,9 @@ public class JetViewPushServlet extends HttpServlet {
                 .log();
     }
 
-    public static void sendToClient(String componentId, Map<String, Object> data) {
+    public static void sendToClient(String clientId, Map<String, Object> data) {
         CLIENTS.entrySet().stream()
-                .filter(entry -> entry.getValue().equals(componentId))
+                .filter(entry -> entry.getValue().equals(clientId))
                 .map(Map.Entry::getKey)
                 .findFirst()
                 .ifPresent(context -> {
@@ -104,17 +102,15 @@ public class JetViewPushServlet extends HttpServlet {
                 });
     }
 
-    public static void clearClients(Page page) {
-        page.traverse()
-                .map(Component::getId)
-                .forEach(componentId -> CLIENTS.entrySet().stream()
-                        .filter(entry -> entry.getValue().equals(componentId))
-                        .findFirst()
-                        .map(Map.Entry::getKey)
-                        .ifPresent(context -> {
-                            context.complete();
-                            CLIENTS.remove(context);
-                        }));
+    public static void removeClient(String clientId) {
+        CLIENTS.entrySet().stream()
+                .filter(entry -> entry.getValue().equals(clientId))
+                .findAny()
+                .map(Map.Entry::getKey)
+                .ifPresent(context -> {
+                    context.complete();
+                    CLIENTS.remove(context);
+                });
     }
 
 }
