@@ -90,7 +90,7 @@ public class JetViewPushServlet extends HttpServlet {
         CLIENTS.entrySet().stream()
                 .filter(entry -> entry.getValue().equals(clientId))
                 .map(Map.Entry::getKey)
-                .findFirst()
+                .findAny()
                 .ifPresent(context -> {
                     try {
                         PrintWriter out = context.getResponse().getWriter();
