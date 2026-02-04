@@ -141,7 +141,8 @@ const Bootstrap = (() => {
     class Progress extends JV.EnhanceMixin(HTMLDivElement) {
 
         #progressBar;
-        #errorListener;
+        #connectionOpenListener;
+        #connectionErrorListener;
         #percent = 0;
         #completed = true;
 
@@ -166,25 +167,31 @@ const Bootstrap = (() => {
                     }
                 }
             })
-            this.#errorListener = event => {
+            this.#connectionOpenListener = event => {
+                console.log(this.getJvId() + ": open");
+            };
+            this.#connectionErrorListener = event => {
                 if (event.target.readyState === EventSource.CONNECTING) {
                     if (!this.#completed) {
                         const interval = setInterval(() => {
                             if (event.target.readyState === EventSource.OPEN) {
                                 clearInterval(interval);
-                            } else if (!this.#completed) {
-                                this.call("state");
+                                if (!this.#completed) {
+                                    this.call("state");
+                                }
                             }
                         }, 1000);
                     }
                 }
             };
-            JV.getPushSource().addErrorListener(this.#errorListener);
+            JV.getPushSource().addConnectionOpenListener(this.#connectionOpenListener);
+            JV.getPushSource().addConnectionErrorListener(this.#connectionErrorListener);
         }
 
         disconnectedCallback() {
             JV.getPushSource().unsubscribe(this);
-            JV.getPushSource().removeErrorListener(this.#errorListener);
+            JV.getPushSource().removeConnectionOpenListener(this.#connectionOpenListener);
+            JV.getPushSource().removeConnectionErrorListener(this.#connectionErrorListener);
         }
     }
 

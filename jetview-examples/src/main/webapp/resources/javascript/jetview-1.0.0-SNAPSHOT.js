@@ -61,11 +61,13 @@ const JV = (() => {
 
         #eventSource;
         #subscribers;
-        #errorListeners;
+        #connectionOpenListeners;
+        #connectionErrorListeners;
 
         constructor(pushUri) {
             this.#subscribers = new Map();
-            this.#errorListeners = new Set();
+            this.#connectionOpenListeners = new Set();
+            this.#connectionErrorListeners = new Set();
             const jvId = document.body.getAttribute("data-jv-id");
             this.#eventSource = new EventSource(`${pushUri}?id=${jvId}`);
             this.#eventSource.addEventListener("message", event => {
@@ -77,8 +79,11 @@ const JV = (() => {
                     subscriber(message);
                 }
             });
+            this.#eventSource.addEventListener("open", event => {
+                this.#connectionOpenListeners.forEach(listener => listener(event));
+            });
             this.#eventSource.addEventListener("error", event => {
-                this.#errorListeners.forEach(listener => listener(event));
+                this.#connectionErrorListeners.forEach(listener => listener(event));
             });
         }
 
@@ -90,12 +95,20 @@ const JV = (() => {
             this.#subscribers.delete(enhanceMixin.getJvId());
         }
 
-        addErrorListener(listener) {
-            this.#errorListeners.add(listener);
+        addConnectionOpenListener(listener) {
+            this.#connectionOpenListeners.add(listener);
         }
 
-        removeErrorListener(listener) {
-            this.#errorListeners.delete(listener);
+        removeConnectionOpenListener(listener) {
+            this.#connectionOpenListeners.delete(listener);
+        }
+
+        addConnectionErrorListener(listener) {
+            this.#connectionErrorListeners.add(listener);
+        }
+
+        removeConnectionErrorListener(listener) {
+            this.#connectionErrorListeners.delete(listener);
         }
     }
 
