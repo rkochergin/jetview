@@ -4,7 +4,6 @@ import com.jetview.core.annotation.View;
 import com.jetview.core.component.Component;
 import com.jetview.core.component.Composite;
 
-import java.util.Arrays;
 import java.util.Map;
 
 import static com.jetview.core.app.JetViewContext.getRenderer;

@@ -6,14 +6,14 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.Objects;
 
-public record Event(Component component, String event, Map<String, Object> params) implements Serializable {
+public record Event(Component component, String type, Map<String, Object> params) implements Serializable {
 
     public static final String ON_CLICK = "onclick";
     public static final String ON_DOUBLE_CLICK = "ondblclick";
 
-    public Event(Component component, String event, Map<String, Object> params) {
+    public Event(Component component, String type, Map<String, Object> params) {
         this.component = component;
-        this.event = event;
+        this.type = type;
         this.params = Objects.nonNull(params) ? Map.copyOf(params) : null;
     }
 

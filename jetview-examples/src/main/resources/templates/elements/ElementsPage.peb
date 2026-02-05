@@ -3,7 +3,8 @@
 {% block title %} Elements Page {{ title }} {% endblock %}
 
 {% block content %}
-    {{ CustomComponent }}
+{#    {{ CustomComponent }}#}
+    {{ HtmlElement }}
 {% endblock %}
 
 {% block javascript %}

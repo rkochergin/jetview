@@ -102,8 +102,9 @@ public class Component implements Child<Component>, Renderable, Serializable {
         Objects.requireNonNull(name, "name is null");
         if (eventHandler == null) {
             listeners.remove(name);
+        } else {
+            listeners.put(name, eventHandler);
         }
-        listeners.put(name, eventHandler);
     }
 
     protected boolean hasListener(String name) {
