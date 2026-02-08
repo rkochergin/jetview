@@ -15,24 +15,21 @@ import java.util.Set;
 @View("templates/elements/ElementsPage.peb")
 public class ElementsPage extends Page {
     public ElementsPage() {
-//        setComponent("CustomComponent", new CustomComponent());
+        HtmlElement div = new HtmlElement("div");
 
         HtmlElement h1 = new HtmlElement("h1");
         h1.setTextContent("Header");
 
         HtmlElement button = new HtmlElement("button");
         button.setTextContent("Button");
-        button.setAttribute("is", "jv-el-button");
-        button.addEventListener("click", new IEventHandler() {
-            @Override
-            public void onEvent(Event event) {
-                System.out.println("event = " + event);
-                button.removeEventListener(event.type(), this);
-                button.addEventListener(event.type(), this, Set.of("shiftKey"));
-            }
-        }, Set.of("altKey"));
+        button.addEventListener("click", (IEventHandler) event -> {
+                    HtmlElement span = new HtmlElement("span");
+                    span.setTextContent("clicked with params: %s".formatted(event.params()));
+                    span.addEventListener("click", _ -> div.removeChild(span));
+                    div.appendChild(span).appendChild(new HtmlElement("br"));
+                },
+                Set.of("altKey", "ctrlKey", "shiftKey"));
 
-        HtmlElement div = new HtmlElement("div");
         div.appendChild(h1).appendChild(button);
 
         setComponent("HtmlElement", div);

@@ -25,6 +25,7 @@ public class HtmlElement extends Composite<HtmlElement>
     public HtmlElement(String tagName) {
         delegate = new org.jsoup.nodes.Element(tagName);
         delegate.attr("data-jv-id", getId());
+        delegate.attr("is", "jv-el-%s".formatted(tagName));
     }
 
     @Override
@@ -53,14 +54,34 @@ public class HtmlElement extends Composite<HtmlElement>
 
     @Override
     public void setTextContent(String textContent) {
-        delegate.text(textContent);
+        if (isJetViewAjaxPageRequest()) {
+            execJs("this.textContent = '%s'".formatted(textContent));
+        } else {
+            delegate.text(textContent);
+        }
     }
 
     @Override
     public HtmlElement appendChild(Node<HtmlElement, IEventHandler> node) {
         var child = (HtmlElement) node;
-        delegate.appendChild(child.delegate);
+        if (isJetViewAjaxPageRequest()) {
+            execJs("this.insertAdjacentHTML('beforeend', '%s')".formatted(child.delegate.outerHtml()));
+        } else {
+            delegate.appendChild(child.delegate);
+        }
         add(child);
+        return this;
+    }
+
+    @Override
+    public HtmlElement removeChild(Node<HtmlElement, IEventHandler> node) {
+        var child = (HtmlElement) node;
+        if (isJetViewAjaxPageRequest()) {
+            execJs("this.querySelector('[data-jv-id=\"%s\"]').remove()".formatted(child.getId()));
+        } else {
+            delegate.childNodes().remove(child.delegate);
+        }
+        removeIf(element -> element.getId().equals(child.getId()));
         return this;
     }
 
@@ -91,7 +112,7 @@ public class HtmlElement extends Composite<HtmlElement>
                         .formatted(eventType, eventPropertyRequirements.stream()
                                 .map("'%s'"::formatted).collect(Collectors.joining(","))));
             } else {
-                delegate.attr("data-jv-listener-" + eventType, String.join(",", eventPropertyRequirements));
+                delegate.attr("data-jv-listener-%s".formatted(eventType), String.join(",", eventPropertyRequirements));
             }
         }
     }
@@ -107,7 +128,7 @@ public class HtmlElement extends Composite<HtmlElement>
             if (isJetViewAjaxPageRequest()) {
                 execJs("this.removeEventHandler('%s')".formatted(eventType));
             } else {
-                delegate.removeAttr("data-jv-listener-" + eventType);
+                delegate.removeAttr("data-jv-listener-%s".formatted(eventType));
             }
             removeListener(eventType);
         }
