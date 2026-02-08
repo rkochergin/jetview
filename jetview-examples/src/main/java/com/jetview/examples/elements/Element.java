@@ -6,5 +6,5 @@ package com.jetview.examples.elements;
 public interface Element<T extends Element<T, L>, L> extends Node<T, L> {
     String getTagName();
     String getOuterHtml();
-    void setAttribute(String attribute, String value);
+    T setAttribute(String attribute, String value);
 }

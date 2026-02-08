@@ -5,10 +5,7 @@ package com.jetview.examples.elements;
  */
 public interface Node<T extends Node<T, L>, L> extends EventTarget<L> {
     String getTextContent();
-
-    void setTextContent(String textContent);
-
+    T setTextContent(String textContent);
     T appendChild(Node<T, L> node);
-
     T removeChild(Node<T, L> node);
 }
