@@ -1,54 +1,127 @@
 const Elements = (() => {
 
-    class Button extends JV.EnhanceMixin(HTMLButtonElement) {
+    const ElementMixin = (superclass) => {
+        return class extends JV.EnhanceMixin(superclass) {
 
-        static #LISTENERS_NS = "data-jv-listener-";
+            #handlers = new Map();
 
-        #handlers = new Map();
-
-        constructor() {
-            super();
-            this.getAttributeNames().forEach(name => {
-                if (name.startsWith(Button.#LISTENERS_NS)) {
-                    const eventPropertyRequirements = this.consumeAttribute(name);
-                    const eventType = name.replace(Button.#LISTENERS_NS, "")
-                    this.setEventHandler(eventType, eventPropertyRequirements.split(","));
-                }
-            });
-        }
-
-        connectedCallback() {
-            super.connectedCallback();
-            // this.call('attach');
-        }
-
-        setEventHandler(eventType, eventPropertyRequirements) {
-            const handler = eventPropertyRequirements ?
-                evt => this.call(eventType, this.selectKeys(evt, ...eventPropertyRequirements)) :
-                () => this.call(eventType);
-            this.addEventListener(eventType, handler);
-            this.#handlers.set(eventType, handler)
-        }
-
-        removeEventHandler(eventType) {
-            const handler = this.#handlers.get(eventType);
-            if (handler) {
-                this.removeEventListener(eventType, handler);
-                this.#handlers.delete(eventType);
+            constructor() {
+                super();
+                this.getAttributeNames().forEach(name => {
+                    if (name.startsWith(this.constructor.LISTENERS_NS)) {
+                        const eventPropertyRequirements = this.consumeAttribute(name);
+                        const eventType = name.replace(this.constructor.LISTENERS_NS, "")
+                        this.setEventHandler(eventType, eventPropertyRequirements.split(","));
+                    }
+                });
             }
-        }
 
-        update(data) {
-            for (const item of data) {
-                if (item.js) {
-                    eval(item.js);
+            static get LISTENERS_NS() {
+                return "data-jv-listener-";
+            }
+
+            setEventHandler(eventType, eventPropertyRequirements) {
+                const handler = eventPropertyRequirements ?
+                    evt => this.call(eventType, this.selectKeys(evt, ...eventPropertyRequirements)) :
+                    () => this.call(eventType);
+                this.addEventListener(eventType, handler);
+                this.#handlers.set(eventType, handler)
+            }
+
+            removeEventHandler(eventType) {
+                const handler = this.#handlers.get(eventType);
+                if (handler) {
+                    this.removeEventListener(eventType, handler);
+                    this.#handlers.delete(eventType);
                 }
             }
-        }
 
+            update(data) {
+                for (const item of data) {
+                    if (item.js) {
+                        eval(item.js);
+                    }
+                }
+            }
+
+        };
+    };
+
+    class Html extends ElementMixin(HTMLHtmlElement) {
     }
 
-    return {Button};
+    class Head extends ElementMixin(HTMLHeadElement) {
+    }
+
+    class Body extends ElementMixin(HTMLBodyElement) {
+    }
+
+    class Div extends ElementMixin(HTMLDivElement) {
+    }
+
+    class Span extends ElementMixin(HTMLSpanElement) {
+    }
+
+    class Paragraph extends ElementMixin(HTMLParagraphElement) {
+    }
+
+    class Heading1 extends ElementMixin(HTMLHeadingElement) {
+    }
+
+    class Heading2 extends ElementMixin(HTMLHeadingElement) {
+    }
+
+    class Heading3 extends ElementMixin(HTMLHeadingElement) {
+    }
+
+    class Heading4 extends ElementMixin(HTMLHeadingElement) {
+    }
+
+    class Heading5 extends ElementMixin(HTMLHeadingElement) {
+    }
+
+    class Heading6 extends ElementMixin(HTMLHeadingElement) {
+    }
+
+    class Anchor extends ElementMixin(HTMLAnchorElement) {
+    }
+
+    class HR extends ElementMixin(HTMLHRElement) {
+    }
+
+    class BR extends ElementMixin(HTMLBRElement) {
+    }
+
+    class Form extends ElementMixin(HTMLFormElement) {
+    }
+
+    class Input extends ElementMixin(HTMLInputElement) {
+    }
+
+    class Button extends ElementMixin(HTMLButtonElement) {
+    }
+
+    return {
+        Html, Head, Body, Div, Span, Paragraph, Heading1, Heading2, Heading3,
+        Heading4, Heading5, Heading6, Anchor, HR, BR, Form, Input, Button
+    };
 })();
 
+customElements.define("jv-el-html", Elements.Html, {extends: "html"});
+customElements.define("jv-el-head", Elements.Head, {extends: "head"});
+customElements.define("jv-el-body", Elements.Body, {extends: "body"});
+customElements.define("jv-el-div", Elements.Div, {extends: "div"});
+customElements.define("jv-el-span", Elements.Span, {extends: "span"});
+customElements.define("jv-el-p", Elements.Paragraph, {extends: "p"});
+customElements.define("jv-el-h1", Elements.Heading1, {extends: "h1"});
+customElements.define("jv-el-h2", Elements.Heading2, {extends: "h2"});
+customElements.define("jv-el-h3", Elements.Heading3, {extends: "h3"});
+customElements.define("jv-el-h4", Elements.Heading4, {extends: "h4"});
+customElements.define("jv-el-h5", Elements.Heading5, {extends: "h5"});
+customElements.define("jv-el-h6", Elements.Heading6, {extends: "h6"});
+customElements.define("jv-el-a", Elements.Anchor, {extends: "a"});
+customElements.define("jv-el-hr", Elements.HR, {extends: "hr"});
+customElements.define("jv-el-br", Elements.BR, {extends: "br"});
+customElements.define("jv-el-form", Elements.Form, {extends: "form"});
+customElements.define("jv-el-input", Elements.Input, {extends: "input"});
 customElements.define("jv-el-button", Elements.Button, {extends: "button"});
