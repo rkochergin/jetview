@@ -2,13 +2,11 @@ package com.jetview.examples.bootstrap;
 
 import com.jetview.core.annotation.Path;
 import com.jetview.core.annotation.View;
-import com.jetview.core.component.Component;
 import com.jetview.core.component.Composite;
 import com.jetview.core.component.Container;
 import com.jetview.core.component.Page;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 /**
@@ -48,22 +46,18 @@ public class BootstrapProgressPage extends Page {
             setComponent("Progress", progress);
         }
 
-        @Override
-        public Optional<Component> getParent() {
-            return super.getParent();
-        }
-
         private void runTask(int min, int max, int sleep) {
-            new Thread(() -> {
+            Thread.ofVirtual().start(() -> {
                 for (int i = min; i <= max; i++) {
                     try {
                         Thread.sleep(sleep);
                     } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
                         throw new RuntimeException(e);
                     }
                     progress.setValue(i);
                 }
-            }).start();
+            });
         }
     }
 }
