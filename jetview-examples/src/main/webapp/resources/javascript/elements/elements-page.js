@@ -128,10 +128,23 @@ const Elements = (() => {
     class LI extends ElementMixin(HTMLLIElement) {
     }
 
+    class Table extends ElementMixin(HTMLTableElement) {
+    }
+
+    class TableRow extends ElementMixin(HTMLTableRowElement) {
+    }
+
+    class TableHeaderCell extends ElementMixin(HTMLTableCellElement) {
+    }
+
+    class TableDataCell extends ElementMixin(HTMLTableCellElement) {
+    }
+
     return {
         Html, Head, Body, Style, Script, Div, Span, Paragraph, Heading1, Heading2,
         Heading3, Heading4, Heading5, Heading6, Anchor, Image, HR, BR,
-        Form, Input, Button, Select, TextArea, Label, UL, OL, LI
+        Form, Input, Button, Select, TextArea, Label, UL, OL, LI,
+        Table, TableRow, TableHeaderCell, TableDataCell
     };
 })();
 
@@ -162,3 +175,7 @@ customElements.define("jv-el-label", Elements.Label, {extends: "label"});
 customElements.define("jv-el-ul", Elements.UL, {extends: "ul"});
 customElements.define("jv-el-ol", Elements.OL, {extends: "ol"});
 customElements.define("jv-el-li", Elements.LI, {extends: "li"});
+customElements.define("jv-el-table", Elements.Table, {extends: "table"});
+customElements.define("jv-el-tr", Elements.TableRow, {extends: "tr"});
+customElements.define("jv-el-th", Elements.TableHeaderCell, {extends: "th"});
+customElements.define("jv-el-td", Elements.TableDataCell, {extends: "td"});
