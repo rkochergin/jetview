@@ -56,6 +56,12 @@ const Elements = (() => {
     class Body extends ElementMixin(HTMLBodyElement) {
     }
 
+    class Style extends ElementMixin(HTMLStyleElement) {
+    }
+
+    class Script extends ElementMixin(HTMLScriptElement) {
+    }
+
     class Div extends ElementMixin(HTMLDivElement) {
     }
 
@@ -86,6 +92,9 @@ const Elements = (() => {
     class Anchor extends ElementMixin(HTMLAnchorElement) {
     }
 
+    class Image extends ElementMixin(HTMLImageElement) {
+    }
+
     class HR extends ElementMixin(HTMLHRElement) {
     }
 
@@ -101,15 +110,27 @@ const Elements = (() => {
     class Button extends ElementMixin(HTMLButtonElement) {
     }
 
+    class Select extends ElementMixin(HTMLSelectElement) {
+    }
+
+    class TextArea extends ElementMixin(HTMLTextAreaElement) {
+    }
+
+    class Label extends ElementMixin(HTMLLabelElement) {
+    }
+
     return {
-        Html, Head, Body, Div, Span, Paragraph, Heading1, Heading2, Heading3,
-        Heading4, Heading5, Heading6, Anchor, HR, BR, Form, Input, Button
+        Html, Head, Body, Style, Script, Div, Span, Paragraph, Heading1, Heading2,
+        Heading3, Heading4, Heading5, Heading6, Anchor, Image, HR, BR,
+        Form, Input, Button, Select, TextArea, Label
     };
 })();
 
 customElements.define("jv-el-html", Elements.Html, {extends: "html"});
 customElements.define("jv-el-head", Elements.Head, {extends: "head"});
 customElements.define("jv-el-body", Elements.Body, {extends: "body"});
+customElements.define("jv-el-style", Elements.Style, {extends: "style"});
+customElements.define("jv-el-script", Elements.Script, {extends: "script"});
 customElements.define("jv-el-div", Elements.Div, {extends: "div"});
 customElements.define("jv-el-span", Elements.Span, {extends: "span"});
 customElements.define("jv-el-p", Elements.Paragraph, {extends: "p"});
@@ -120,8 +141,12 @@ customElements.define("jv-el-h4", Elements.Heading4, {extends: "h4"});
 customElements.define("jv-el-h5", Elements.Heading5, {extends: "h5"});
 customElements.define("jv-el-h6", Elements.Heading6, {extends: "h6"});
 customElements.define("jv-el-a", Elements.Anchor, {extends: "a"});
+customElements.define("jv-el-img", Elements.Image, {extends: "img"});
 customElements.define("jv-el-hr", Elements.HR, {extends: "hr"});
 customElements.define("jv-el-br", Elements.BR, {extends: "br"});
 customElements.define("jv-el-form", Elements.Form, {extends: "form"});
 customElements.define("jv-el-input", Elements.Input, {extends: "input"});
 customElements.define("jv-el-button", Elements.Button, {extends: "button"});
+customElements.define("jv-el-select", Elements.Select, {extends: "select"});
+customElements.define("jv-el-textarea", Elements.TextArea, {extends: "textarea"});
+customElements.define("jv-el-label", Elements.Label, {extends: "label"});
