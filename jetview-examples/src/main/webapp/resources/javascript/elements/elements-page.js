@@ -119,10 +119,19 @@ const Elements = (() => {
     class Label extends ElementMixin(HTMLLabelElement) {
     }
 
+    class UL extends ElementMixin(HTMLUListElement) {
+    }
+
+    class OL extends ElementMixin(HTMLOListElement) {
+    }
+
+    class LI extends ElementMixin(HTMLLIElement) {
+    }
+
     return {
         Html, Head, Body, Style, Script, Div, Span, Paragraph, Heading1, Heading2,
         Heading3, Heading4, Heading5, Heading6, Anchor, Image, HR, BR,
-        Form, Input, Button, Select, TextArea, Label
+        Form, Input, Button, Select, TextArea, Label, UL, OL, LI
     };
 })();
 
@@ -150,3 +159,6 @@ customElements.define("jv-el-button", Elements.Button, {extends: "button"});
 customElements.define("jv-el-select", Elements.Select, {extends: "select"});
 customElements.define("jv-el-textarea", Elements.TextArea, {extends: "textarea"});
 customElements.define("jv-el-label", Elements.Label, {extends: "label"});
+customElements.define("jv-el-ul", Elements.UL, {extends: "ul"});
+customElements.define("jv-el-ol", Elements.OL, {extends: "ol"});
+customElements.define("jv-el-li", Elements.LI, {extends: "li"});
