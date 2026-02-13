@@ -124,9 +124,7 @@ public class HtmlElement extends Composite<HtmlElement>
             }
         });
         if (!hasListener(eventType)) {
-            setListener(eventType, event -> listeners.get(event.type()).forEach(h -> {
-                h.onEvent(event);
-            }));
+            setListener(eventType, event -> listeners.get(event.type()).forEach(h -> h.onEvent(event)));
             if (isJetViewAjaxPageRequest()) {
                 clientApi.setEventHandler(eventType, eventPropertyRequirements);
             } else {
